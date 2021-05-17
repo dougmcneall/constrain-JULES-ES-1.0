@@ -143,8 +143,26 @@ We run Jules-ES-1.0 in a 500-member ensemble, driven by historical reanalysis. E
 
 We identify model variants, and their associated input configurations, where the model produces output that is consistent - within uncertain limits - with modern observations of the carbon cycle. We build statistical models of the relationship between the input configuration and the modern model output - termed emulators - which allow us to visualise and explore these relationships as if we had a much larger ensemble.
 
-Using the emulators, we are able to generate a number of analyses that inform us of the drivers of model behaviour, and the source of model biases and errors. We perform sensitivity analysis, which helps us quantify the effect of perturbing parameters on the model output. 
+Using the emulators, we are able to generate a number of analyses that inform us of the drivers of model behaviour, and the source of model biases and errors.
 
+We provide a failure analysis, which allows us to identify parameter setting which cause failure of the model to run.
+
+We perform sensitivity analysis, which helps us quantify the effect of perturbing parameters on the model output.
+
+Finding model outputs which match modern observations, we identify parts of input parameter space where the model output is acceptably good. We can rule out parameter settings where the output is not plausible. Constraining using each output in turn allows us to see which outputs are useful for constraining particular inputs. We see relationships between outputs manifest as joint constraint: when one output is used to constrain inputs, this induces a constraint on other, related outputs.
+
+Having constrained both input parameter space and model outputs using modern observations of the carbon cycle, we examine the impact of the modelled carbon budget through time. What is the potential for constraining the carbon budget using only modern observations? What happens if we extend those observations back through time?
+
+
+\section{The ensemble}
+
+%%% TWO-COLUMN FIGURES
+%
+%%f
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/plot-carbon-cycle-timeseries.png}
+\caption{Carbon cycle quantities in the JULES ensemble.}
+\end{figure*}
 
 
 \section{HEADING}
