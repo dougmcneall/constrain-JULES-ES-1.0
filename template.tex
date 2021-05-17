@@ -137,6 +137,13 @@ TEXT
 
 \section{Analysis plan}
 
+In this initial analysis JULES-ES-1.0, we constrain a large ensemble of JULES runs using modern observations of the carbon cycle. We explore the resulting constraint on the behaviour of the carbon cycle during the historical period.
+
+We run Jules-ES-1.0 in a 500-member ensemble, driven by historical reanalysis. Each ensemble member has a different configuration of 32 input parameters, identified as potentially important in influencing land surface dynamics important by the  model developers. The parameters were perturbed randomly, in a Latin hypercube configuration, and within ranges defined by the model developers as being likely to at least produce output from the model.
+
+We identify model variants, and their associated input configurations, where the model produces output that is consistent - within uncertain limits - with modern observations of the carbon cycle. We build statistical models of the relationship between the input configuration and the modern model output - termed emulators - which allow us to visualise and explore these relationships as if we had a much larger ensemble.
+
+Using the emulators, we are able to generate a number of analyses that inform us of the drivers of model behaviour, and the source of model biases and errors. We perform sensitivity analysis, which helps us quantify the effect of perturbing parameters on the model output. 
 
 
 
