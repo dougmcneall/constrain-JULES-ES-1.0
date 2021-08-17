@@ -123,37 +123,28 @@
 
 
 \begin{abstract}
-We use modern observations to constrain the historic carbon cycle in the Earth system configuration of the land surface model JULES.
 
-\end{abstract}
-
-
-\copyrightstatement{TEXT} %% This section is optional and can be used for copyright transfers.
-
-
-\introduction  %% \introduction[modified heading if necessary]
-TEXT
-
-
-\section{Analysis plan}
-
-In this initial analysis JULES-ES-1.0, we constrain a large ensemble of JULES runs using modern observations of the carbon cycle. We explore the resulting constraint on the behaviour of the carbon cycle during the historical period.
+We constrain a large ensemble of JULES-ES-1.0 using modern observations of the carbon cycle. We explore the resulting constraint on the behaviour of the carbon cycle during the historical period.
 
 We run Jules-ES-1.0 in a 500-member ensemble, driven by historical reanalysis. Each ensemble member has a different configuration of 32 input parameters, identified as potentially important in influencing land surface dynamics important by the  model developers. The parameters were perturbed randomly, in a Latin hypercube configuration, and within ranges defined by the model developers as being likely to at least produce output from the model.
 
 We identify model variants, and their associated input configurations, where the model produces output that is consistent - within uncertain limits - with modern observations of the carbon cycle. We build statistical models of the relationship between the input configuration and the modern model output - termed emulators - which allow us to visualise and explore these relationships as if we had a much larger ensemble.
 
-Using the emulators, we are able to generate a number of analyses that inform us of the drivers of model behaviour, and the source of model biases and errors.
-
-We provide a failure analysis, which allows us to identify parameter setting which cause failure of the model to run.
-
-We perform sensitivity analysis, which helps us quantify the effect of perturbing parameters on the model output.
+Using the ensemble and the emulators, we are able to generate a number of analyses that inform us of the drivers of model behaviour, and the source of model biases and errors. We provide a failure analysis, which allows us to identify parameter setting which cause failure of the model to run. We perform sensitivity analysis, which helps us quantify the effect of perturbing parameters on the model output.
 
 Finding model outputs which match modern observations, we identify parts of input parameter space where the model output is acceptably good. We can rule out parameter settings where the output is not plausible. Constraining using each output in turn allows us to see which outputs are useful for constraining particular inputs. We see relationships between outputs manifest as joint constraint: when one output is used to constrain inputs, this induces a constraint on other, related outputs.
 
 Having constrained both input parameter space and model outputs using modern observations of the carbon cycle, we examine the impact of the modelled carbon budget through time. What is the potential for constraining the carbon budget using only modern observations? What happens if we extend those observations back through time?
 
-An extension to consider: what happens when we project the constrained space forwards through time. For this, we need runs using future boundary conditions.
+Our analysis informs the construction a new ensemble design, with ensemble members picked to lie within the input space not ruled out by a comparison of the model behaviour with modern observations. 
+\end{abstract}
+
+
+\copyrightstatement{TEXT} %% This section is optional and can be used for copyright transfers.
+
+\section{Analysis plan}
+
+Our guiding principles for this paper: what does comparing the model output with observations tell us about where to run the model, and also about the history of the carbon cycle?
 
 Suggested paper structure
 \begin{enumerate}
@@ -161,33 +152,57 @@ Suggested paper structure
     \item Ensemble
 \end{enumerate}
 
+An extension to consider: what happens when we project the constrained space forwards through time. For this, we need runs using future boundary conditions.
+
+
+\introduction  %% \introduction[modified heading if necessary]
+
+\begin{enumerate}
+    \item Jules version, aims, context 
+    \item Uncertainty Quantification for model development
+\end{enumerate}
+
 
 
 \section{JULES behaviour across the ensemble}
 
-%%% TWO-COLUMN FIGURES
-%
-%%f
+\subsection{Ensemble design}
+
+\subsection{Failure analysis}
+
+We analyse the ensemble to remove "failed" runs, and remove ensemble members in parts of parameter space that cannot hope to produce a useful simulation of the carbon cycle. First, we map ensemble members where the model crashed or failed to run, perhaps due to numerical error (termed "failed"). Second, we identify parts of parameter space where important parts of the carbon cycle are completely missing - that is, basic carbon cycle quantities are at or close to zero at the end of the run (termed "zero carbon cycle"). For this second class, we choose a threshold of mean modern global NPP close to zero (* scale data to find out)
+
+The nature of perturbed parameter ensembles is that there is often a setting of some parameters that makes up for a poor choice of a particular parameter, and so outright and easily identifiable thresholds for failure in the marginal range of a particular parameter are rare. However, careful visualisation and analysis can give the modeller a good idea of regions of parameter space that can be removed, or parameters that the model is particularly sensitive to.
+
+in fig. \ref{fig:run-failure-pairs}, we see a pairs plot of "failed" runs (upper right panels) and, "zero carbon cycle" panels (lower left panels). The plot shows the two-dimensional projections of run failures against each pair of inputs, allowing visual identification of inputs that control failures, and any potential two-way interactions.
+
+For example, we can see that both $f0\_io$ and $b\_wl\_io$ have important thresholds, beyond which there is almost no chance of a functioning carbon cycle. As there appears little to no interaction between these two, this presents as a nearly-blank plot at the intersection of the parameters on the plot, with inputs identifying zero-carbon runs around the edges of the sub plot.
+
+
+Combine the plot for these two? - pairs of both failures and $f0\_io b\_wl\_io$ threshold?
+
 \begin{figure*}[t]
-\includegraphics[width=12cm]{./graphics/plot-carbon-cycle-timeseries-primary-1.png}
-\caption{Carbon cycle quantities in the JULES ensemble.}
+\includegraphics[width=12cm]{./graphics/run-failure-pairs.pdf}
+\caption{Pairs plot of the locations in (normalised) input space of the ensemble members that did not run/failed.}
+\label{fig:run-failure-pairs}
 \end{figure*}
+
+
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/run-failure-hists.pdf}
+\caption{Histograms of the locations in (normalised) input space of the ensemble members that did not run/failed.}
+\end{figure*}
+
+
 
 %%% TWO-COLUMN FIGURES
 %
 %%f
 \begin{figure*}[t]
-\includegraphics[width=12cm]{./graphics/plot-carbon-cycle-timeseries-secondary-1.png}
-\caption{Carbon cycle quantities in the JULES ensemble.}
+\includegraphics[width=12cm]{./graphics/plot-carbon-cycle-timeseries-primary-1.pdf}
+\caption{Primary carbon cycle quantities in the JULES ensemble.}
 \end{figure*}
 
-%%% TWO-COLUMN FIGURES
-%
-%%f
-\begin{figure*}[t]
-\includegraphics[width=12cm]{./graphics/plot-carbon-cycle-timeseries-tertiary-1.png}
-\caption{Carbon cycle quantities in the JULES ensemble.}
-\end{figure*}
 
 %%% TWO-COLUMN FIGURES
 %
@@ -218,13 +233,55 @@ Suggested paper structure
 
 \section{Results}
 
+
+
+\subsection{Sensitivity Analysis}
+We use the emulator fit to a range of outputs to perform several types of sensitivity analysis.
+
+\subsubsection{Global one-at-a-time Sensitivity}
+
+We fit a gaussian process emulator (direct km) to each global summary output, both as a ``modern value'' (mean of 1994 - 2014), and as an ``anomaly" (change since 1850-1870).
+
+We sample from the input space in a one-at-a-time fashion: each input is sampled uniformly across it's input space, with all other inputs held at median values. The variance of the mean emulated output as each input is varied is then used as a measure of the sensitivity of that output to the corresponding input.
+
+Summaries of this sensitivity analysis can be seen in fig. () for the modern value, and in fig. for the change across the ensemble. Sensitivities are normalised so that they lie in a $[0 -1]$ range for each output. Summary measures for each input are then averaged across all outputs, and the plotted inputs are ranked by their average influence across all outputs.
+
+
+
+
+
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/oat_var_sensmat_level1a_Y}
+\caption{One-at-a-time sensitivity summary for global summary ``modern value" output.}
+\label{fig:oat_var_sensmat_level1a_Y}
+\end{figure*}
+
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/oat_var_sensmat_level1a_YAnom}
+\caption{One-at-a-time sensitivity summary for global summary ``anomaly" (change since 1850-1870) output.}
+\label{fig:oat_var_sensmat_level1a_YAnom}
+\end{figure*}
+
+
+\subsubsection{Sensitivity of constraint outputs}
+
+We add detail to our one-at-at-time sensitivity of important outputs - those that we use for constraining JULES. We plot the emulated mean of the each of four outputs - NBP, NPP, vegetation carbon and soil carbon, as each parameter in increased from its minimum to maximum range.
+
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/Y_oaat_const_level1a_scaled_norm}
+\caption{One-at-a-time sensitivity summary for global summary of the ``modern value" of the constraint variables (nbp, npp, cVeg, cSoil)}
+\label{fig:Y_oaat_const_level1a_scaled_norm}
+\end{figure*}
+
+
+
 \subsection{Constraining the historical carbon cycle}
 
 We constrain the historical behaviour of the carbon cycle by removing model runs that lead to implausible values of basic carbon cycle quantities in the modern era. These constrains are outlined in table \ref{table:level_1_constraints}.
 
 Our basic strategy is to exclude model variants that have land carbon stocks, NPP or NBP in the modern era that are inconsistent with modern observations. The modeller (Wiltshire) gave ranges for Vegetation and Soil carbon stocks, NBP and NPP at the end of the model run (2013), with instruction to be conservative - that is with enough range to be sure to encompass reasonable uncertainties. These ranges were considerably wider than the ranges given by the AR5, for example.
 
-At this stage, we do not exclude based on historical carbon fluxes, however, the result of  the constraint of stocks was to limit the range of historical carbon pool fluxes and cumulative changes. For example, we see that the range of cumulative soil carbon changes has been constrained to be almost entirely positive during the historical period (fig. \ref{vegC-soilC-constrained-1}). Conversely, while selecting only those members that have a high carbon stock to start with, the range of behaviour of the vegetation carbon stock has remained unaffected.
+At this stage, we do not exclude based on historical carbon fluxes, however, the result of  the constraint of stocks was to limit the range of historical carbon pool fluxes and cumulative changes. For example, we see that the range of cumulative soil carbon changes has been constrained to be almost entirely positive during the historical period (fig. \ref{fig:vegC-soilC-constrained-1}). Conversely, while selecting only those members that have a high carbon stock to start with, the range of behaviour of the vegetation carbon stock has remained largely unaffected.
 
 The constraints have generally selected those ensemble members with the highest positive change in total land carbon (fig. \ref{fig:total-land-carbon-change-1}) , but many of these are still smaller than the historical change, as modelled by *Friedlingstein et al.* Similarly, we see that the annual land carbon sink is higher in observations than modelled in the ensemble, even under the constraints (fig \ref{fig:total-land-carbon-sink-1}).
 
