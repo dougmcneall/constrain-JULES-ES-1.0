@@ -300,10 +300,6 @@ Because of this wide tolerance of modern behaviours, we perhaps should not be to
 
 However, even given the wide ranges of tolerable behaviour, a large number of our ensemble members are excluded. Of the 362 ensemble members that run, and have non-zero carbon cycle properties (constraint level 1a), only 37 (10.2\%) fall within the wide bounds set by the modeller.
 
-
-
-
-
 %% TWO-COLUMN TABLE
 %%% The different columns must be seperated with a & command and should
 %%% end with \\ to identify the column brake.
@@ -334,9 +330,19 @@ Vegetation Carbon stock & 300 GtC & 800 GtC \\
 \end{figure*}
 
 
-\subsection{Constraining input space}
+\subsection{Constraining input space with an emulator}
 
+Constraining the ensemble my directly rejecting implausible members gives us a useful but rough outline of the input space where the model might be said to behave "well". With only 37 ensemble members, we are able to outline the valid 32 dimensional input space only very approximately. For example the pairs plot in figure \ref{} shows the two-dimensional projections of the retained ensemble members, and more densely populated regions show where the model is more likely to produce valid output.
 
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/pairs_level2_inputs.pdf}
+\caption{level 2 pairs density plot.}
+\label{fig:pairs_level2_inputs}
+\end{figure*}
+
+However, we can improve significantly on the visualisation of the constrained input space with the help of an emulator. 
+
+We fit a Gaussian process emulator to each of the constraint outputs noted in table 1, and for the 356 members of the ensemble that have a non-zero carbon cycle, defined as constraint level 1a. We take $10e5$ samples uniformly from across normalised input space (** note, does this need to be amended to the level 1a space?**), and reject all emulated members where the corresponding mean predicted output does not conform to the level 2 constraints. We plot two dimensional projections of the the density of accepted points in figure \ref{fig:pairs_dens_level1a_km}, colour coded by relative density. Blue areas show regions where there is a high concentration of accepted points, and we would expect a high probability of a model run in at this input location producing a valid carbon cycle.
 
 
 \begin{figure*}[t]
@@ -376,7 +382,7 @@ It turns out that constraining with cumulative NBP, and comparing to the AR6 spr
 \caption{Constraint of historical total land carbon pools (veg + soil)}
 \label{fig:total-land-carbon-sink-1}
 \end{figure*}
-
+[]
 
 \section{HEADING}
 TEXT
