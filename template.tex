@@ -246,6 +246,8 @@ We sample from the input space in a one-at-a-time fashion: each input is sampled
 
 Summaries of this sensitivity analysis can be seen in fig. () for the modern value, and in fig. for the change across the ensemble. Sensitivities are normalised so that they lie in a $[0 -1]$ range for each output. Summary measures for each input are then averaged across all outputs, and the plotted inputs are ranked by their average influence across all outputs.
 
+** A good metric for sensitivity might be "highest ranking" ** We only want to discard parameters that have consistently low rankings. **
+
 
 
 
@@ -277,13 +279,30 @@ We add detail to our one-at-at-time sensitivity of important outputs - those tha
 
 \subsection{Constraining the historical carbon cycle}
 
-We constrain the historical behaviour of the carbon cycle by removing model runs that lead to implausible values of basic carbon cycle quantities in the modern era. These constrains are outlined in table \ref{table:level_1_constraints}.
+We can constrain both the historical behaviour of the model and the model parameter input space by comparison of the model behaviour with observations and other model simulations.
 
-Our basic strategy is to exclude model variants that have land carbon stocks, NPP or NBP in the modern era that are inconsistent with modern observations. The modeller (Wiltshire) gave ranges for Vegetation and Soil carbon stocks, NBP and NPP at the end of the model run (2013), with instruction to be conservative - that is with enough range to be sure to encompass reasonable uncertainties. These ranges were considerably wider than the ranges given by the AR5, for example.
+We use a number of strategies for model constraint.
 
-At this stage, we do not exclude based on historical carbon fluxes, however, the result of  the constraint of stocks was to limit the range of historical carbon pool fluxes and cumulative changes. For example, we see that the range of cumulative soil carbon changes has been constrained to be almost entirely positive during the historical period (fig. \ref{fig:vegC-soilC-constrained-1}). Conversely, while selecting only those members that have a high carbon stock to start with, the range of behaviour of the vegetation carbon stock has remained largely unaffected.
+We find the most effective outputs for constraining model inputs and behaviour. ** One at a time constraint analysis, needs doing **
 
-The constraints have generally selected those ensemble members with the highest positive change in total land carbon (fig. \ref{fig:total-land-carbon-change-1}) , but many of these are still smaller than the historical change, as modelled by *Friedlingstein et al.* Similarly, we see that the annual land carbon sink is higher in observations than modelled in the ensemble, even under the constraints (fig \ref{fig:total-land-carbon-sink-1}).
+
+\subsubsection{Direct constraint of ensemble members}
+
+The simplest way to constrain the historical behaviour of the carbon cycle is by removing from the ensemble model runs that lead to implausible values of basic carbon cycle quantities in the modern era. These constraints are outlined in table \ref{table:level_2_constraints}.
+
+Our strategy is to exclude model variants that have soil or vegetation carbon stocks, net primary production (NPP) or net biome production (NBP) in the modern era that are inconsistent with modern observations or understanding. This approach borrows from the more formal process of history matching, in that ensemble members deemed implausible are excluded. In history matching, a formal statistical process is used, whereas in this first section, we are concerned with simply removing a number of very poorly behaving model variants, such that the modeller is certain that they don't offer useful information about the carbon cycle.
+
+A challenge when comparing models of the land surface with the carbon cycle is the lack of model-independent observations back through time, and the relatively large uncertainty in comparing the model dynamics with the true behaviour of the system. Because of this, it is important to be tolerant to a wide range of behaviours in the model itself. 
+
+The modeller (Wiltshire) gave ranges for Vegetation and Soil carbon stocks, NBP and NPP at the end of the model run (2013), with instruction to be conservative - that is with enough range to be sure to encompass any reasonable uncertainties (see table \ref{table:level_2_constraints}). These ranges were considerably wider than the ranges given by the AR5, for example.
+
+Because of this wide tolerance of modern behaviours, we perhaps should not be too optimistic that large regions of input space, or potential histories of the carbon cycle, should be excluded (alternatively that the space of possible histories and input space should be overly constrained).
+
+However, even given the wide ranges of tolerable behaviour, a large number of our ensemble members are excluded. Of the 362 ensemble members that run, and have non-zero carbon cycle properties (constraint level 1a), only 37 (10.2\%) fall within the wide bounds set by the modeller.
+
+
+
+
 
 %% TWO-COLUMN TABLE
 %%% The different columns must be seperated with a & command and should
@@ -291,13 +310,13 @@ The constraints have generally selected those ensemble members with the highest 
 
 %t
 \begin{table*}[t]
-\caption{Level 1 output constraints}
-\label{table:level_1_constraints}
+\caption{Level 2 output constraints}
+\label{table:level_2_constraints}
 \begin{tabular}{l r r}
 \tophline
 Constraint & Minimum & Maximum \\ 
 \middlehline
-NBP & -10 GtC/yr &  10 GtC/yr\\
+NBP & 0 GtC/yr &  10 GtC/yr\\
 NPP & 35 GtC/yr & 80 GtC/yr \\
 Soil Carbon stock & 750 GtC &  3000 GtC\\ 
 Vegetation Carbon stock & 300 GtC & 800 GtC \\
@@ -308,6 +327,25 @@ Vegetation Carbon stock & 300 GtC & 800 GtC \\
 
 \end{table*}
 
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/level_2_constraints_hists.pdf}
+\caption{level 1 constraint histograms}
+\label{fig:level_2_constraints_hists}
+\end{figure*}
+
+
+\subsection{Constraining input space}
+
+
+
+
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/pairs_dens_level2_km.pdf}
+\caption{level 2 pairs density plot}
+\label{fig:pairs_dens_level1a_km}
+\end{figure*}
+
+
 
 
 
@@ -315,28 +353,29 @@ Vegetation Carbon stock & 300 GtC & 800 GtC \\
 %
 %%f
 \begin{figure*}[t]
-\includegraphics[width=12cm]{./graphics/vegC-soilC-constrained-1}
+\includegraphics[width=12cm]{./graphics/vegC-soilC-constrained.pdf}
 \caption{Constraint of historical soil carbon and vegetation carbon pools}
-\label{fig:vegC-soilC-constrained-1}
+\label{fig:vegC-soilC-constrained}
 \end{figure*}
 
 %%% TWO-COLUMN FIGURES
 
-%f
-\begin{figure*}[t]
-\includegraphics[width=12cm]{./graphics/total-land-carbon-change-1.png}
-\caption{Constraint of historical total land carbon pools (veg + soil)}
-\label{fig:total-land-carbon-change-1}
-\end{figure*}
+
+\subsubsection{Cumulative NBP constraint}
+
+It turns out that constraining with cumulative NBP, and comparing to the AR6 spread does not constrain anywhere near as hard as AW's basic constraints.
 
 \begin{figure*}[t]
-\includegraphics[width=12cm]{./graphics/total-land-carbon-sink-1.png}
+\includegraphics[width=12cm]{./graphics/cumulative_nbp_constrained.pdf}
 \caption{Constraint of historical total land carbon pools (veg + soil)}
 \label{fig:total-land-carbon-sink-1}
 \end{figure*}
 
-
-
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/cumulative_nbp_constrained_pairs.pdf}
+\caption{Constraint of historical total land carbon pools (veg + soil)}
+\label{fig:total-land-carbon-sink-1}
+\end{figure*}
 
 
 \section{HEADING}
