@@ -240,13 +240,24 @@ We use the emulator fit to a range of outputs to perform several types of sensit
 
 \subsubsection{Global one-at-a-time Sensitivity}
 
+A one-at-a-time (OAAT) sensitivity gives a simple and easy-to-interpret measure of the impact of each input on a variety of outputs, but does not include the effects of any interactions between inputs (for example, a non-linear change in model outputs as two or more inputs vary together).  
+
+A one-at-a-time analysis can be completed with a relatively small number of model runs - for example, a low, middle and high run for each parameter in our 32 input dimension example would take fewer than 100 runs. However, using an emulator allows us to better characterise the response of the model across the entire sweep of each parameter.
+
 We fit a gaussian process emulator (direct km) to each global summary output, both as a ``modern value'' (mean of 1994 - 2014), and as an ``anomaly" (change since 1850-1870).
 
-We sample from the input space in a one-at-a-time fashion: each input is sampled uniformly across it's input space, with all other inputs held at median values. The variance of the mean emulated output as each input is varied is then used as a measure of the sensitivity of that output to the corresponding input.
+We sample from the input space in a one-at-a-time fashion: each input is sampled uniformly across it's input space, with all other inputs held at median values. The variance of the mean emulated output as each input is varied is then used as a measure of the sensitivity of that output to the corresponding input. Variance is used as opposed to magnitude of change, as we expect some model outputs not to rise or fall monotonically as an input varies.
 
-Summaries of this sensitivity analysis can be seen in fig. () for the modern value, and in fig. for the change across the ensemble. Sensitivities are normalised so that they lie in a $[0 -1]$ range for each output. Summary measures for each input are then averaged across all outputs, and the plotted inputs are ranked by their average influence across all outputs.
+Different model outputs are clearly sensitive to different model inputs, and so we also seek ways of summarising sensitivity across model outputs. One method is simply to find the mean effect across model outputs. Sensitivities are normalised so that they lie in a $[0 -1]$ range for each output. Summary measures for each input are then averaged across all outputs, and the plotted inputs are ranked by their average influence across all outputs. Individual sensitivities and summaries can be seen in fig. \ref{fig:oat_var_sensmat_level1a_Y} for the modern value, and in fig. \ref{fig:oat_var_sensmat_level1a_YAnom} for the change over the historic period of the ensemble. 
 
-** A good metric for sensitivity might be "highest ranking" ** We only want to discard parameters that have consistently low rankings. **
+\subsubsection{FAST sensitivity analysis}
+
+We use Fourier Amplitiude Sensitivity Test (FAST) as a further measure of global sensitivity of the model outputs to its inputs. The test is administered as the FAST99 algorithm of \cite{Saltelli1999}, through the R package Sensitivity \citep{Rsensitivity}. Again, this algorithm requires a large number of model runs, and so we use emulated model outputs in place of dedicated model runs. This comes at the cost of a risk of innacuracy, as the emulated model outputs won't perfectly reproduce the true model runs at the corresponding inputs. However, the emulator is shown to work adequately for the model outputs in section \ref{ssec:emulator_accuracy}. 
+
+\subsubsection{Choosing or excluding inputs}
+
+
+If we were asked to decide which parameters to exclude a set of parameters for a new ensemble, which would we choose? One way to choose might be to exclude those parameters which have little effect on \emph{any} model output of interest. For this ensemble we find these by ranking the inputs by their summarising their OAAT effect across all outputs. Choosing the inputs that are consistently ranked lowest would be a conservative method of excluding inputs.
 
 %t
 \begin{table*}[t]
@@ -289,6 +300,54 @@ retran\_r\_io       &         28    &  29    &   28 \\
 sigl\_io          &          32    &  28    &   28 \\
 sorp             &         29     & 31     &  29 \\
 knl\_io             &        31    &  32    &   31 \\
+
+\bottomhline
+\end{tabular}
+\belowtable{} % Table Footnotes
+
+\end{table*}
+
+
+%t
+\begin{table*}[t]
+\caption{Ranking sensitivity to inputs}
+\label{table:sens_rank_total}
+\begin{tabular}{l r r r r r}
+\tophline
+parameter & OAT modern value & FAST modern value & OAT anomaly & FAST Anomaly & highest rank \\ 
+\middlehline
+alpha\_io            &            1          &       1      &      1      &       1    &     1 \\ 
+b\_wl\_io              &            2        &          2     &       3   &          2    &     2 \\ 
+lai\_max\_io           &            4      &             6    &        2    &         3    &     2 \\ 
+g\_area\_io            &            3      &            7     &       5   &          6    &      3 \\ 
+n\_inorg\_turnover     &            6      &            3     &       4     &        4    &     3 \\ 
+fd\_io                &            5      &            4     &       6   &          5    &     4 \\ 
+lma\_io               &            7      &            5     &      15     &       13    &     5 \\ 
+nmass\_io             &            9      &            9     &       8      &       7    &     7 \\ 
+r\_grow\_io            &            8      &            8     &       7       &      8    &     7 \\ 
+a\_wl\_io              &           11      &           10     &      11       &      9    &     9 \\ 
+bio\_hum\_cn           &           26      &           27     &       9   &         10    &     9 \\ 
+dqcrit\_io            &           10      &           11     &      18   &         16    &    10 \\ 
+tupp\_io              &           18      &           18     &      10   &         11    &    10 \\ 
+lai\_min\_io           &           14      &           14     &      13 &           12    &    12 \\ 
+tleaf\_of\_io          &           12     &            12     &      12   &         14    &    12 \\ 
+kaps\_roth            &           13      &           13     &      19    &        18    &    13 \\ 
+hw\_sw\_io             &           15      &           16     &      14     &       15    &    14 \\ 
+rootd\_ft\_io          &           17      &           15     &      22  &          21    &    15 \\ 
+f0\_io                &           16      &           17     &      17   &         17    &    16 \\ 
+retran\_l\_io          &           20      &           21     &      16   &         19    &    16 \\ 
+dz0v\_dh\_io           &           19      &           19     &      27    &        25    &    19 \\ 
+g\_root\_io            &           21      &           20     &      23     &       23    &    20 \\ 
+g\_wood\_io            &           22      &           25     &      21  &          20    &    20 \\ 
+nr\_io                &           23      &           23     &      20   &         22    &    20 \\ 
+gs\_nvg\_io            &           30      &           22     &      26    &        24    &    22 \\ 
+dcatch\_dlai\_io       &           27      &           24     &      30    &        31    &    24 \\ 
+tlow\_io              &           24      &           32     &      24    &        29    &    24 \\ 
+l\_vg\_soil            &           25      &           29     &      25    &        26    &    25 \\ 
+retran\_r\_io          &           28      &           26     &      29    &        27    &    26 \\ 
+sigl\_io              &           32      &           30     &      28    &        30    &    28 \\ 
+sorp                 &           29      &           28     &      31    &        28    &    28 \\ 
+knl\_io               &           31      &           31     &      32       &     32    &    31 \\ 
 
 \bottomhline
 \end{tabular}
