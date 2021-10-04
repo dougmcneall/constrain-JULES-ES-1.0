@@ -259,54 +259,6 @@ We use Fourier Amplitiude Sensitivity Test (FAST) as a further measure of global
 
 If we were asked to decide which parameters to exclude a set of parameters for a new ensemble, which would we choose? One way to choose might be to exclude those parameters which have little effect on \emph{any} model output of interest. For this ensemble we find these by ranking the inputs by their summarising their OAAT effect across all outputs. Choosing the inputs that are consistently ranked lowest would be a conservative method of excluding inputs.
 
-%t
-\begin{table*}[t]
-\caption{Ranking sensitivity to inputs}
-\label{table:sens_rank}
-\begin{tabular}{l r r r}
-\tophline
-parameter & modern value & anomaly & highest rank \\ 
-\middlehline
-
-alpha\_io    &                1    &   1     &   1 \\
-b\_wl\_io       &              2   &    3    &    2 \\
-lai\_max\_io      &            4     &  2    &    2 \\
-g\_area\_io     &              3   &    5     &   3 \\
-n\_inorg\_turnover     &      6    &   4       & 4 \\
-fd\_io            &           5    &   6      &  5 \\
-lma\_io            &          7    &  15    &    7 \\
-r\_grow\_io         &          8   &    7    &    7 \\
-nmass\_io         &           9   &    8    &    8 \\
-bio\_hum\_cn        &         26   &    9    &    9 \\
-dqcrit\_io        &          10    &  18    &   10 \\
-tupp\_io          &          18    &  10   &    10 \\
-a\_wl\_io          &          11   &   11   &    11 \\
-tleaf\_of\_io      &          12    &  12    &   12 \\
-kaps\_roth        &          13   &   19    &   13 \\
-lai\_min\_io       &          14   &   13    &   13 \\
-hw\_sw\_io          &         15   &   14    &   14 \\
-f0\_io            &          16    &  17   &    16 \\
-retran\_l\_io      &          20    &  16   &    16 \\
-rootd\_ft\_io      &          17    &  22   &    17 \\
-dz0v\_dh\_io       &          19   &   27    &   19 \\
-nr\_io            &          23    &  20     &  20 \\
-g\_root\_io        &          21  &    23    &   21 \\
-g\_wood\_io         &         22    &  21    &   21 \\
-tlow\_io          &          24   &   24    &   24 \\
-l\_vg\_soil        &          25   &   25    &   25 \\
-gs\_nvg\_io        &          30    &  26    &   26 \\
-dcatch\_dlai\_io    &         27     & 30     &  27 \\
-retran\_r\_io       &         28    &  29    &   28 \\
-sigl\_io          &          32    &  28    &   28 \\
-sorp             &         29     & 31     &  29 \\
-knl\_io             &        31    &  32    &   31 \\
-
-\bottomhline
-\end{tabular}
-\belowtable{} % Table Footnotes
-
-\end{table*}
-
 
 %t
 \begin{table*}[t]
@@ -523,9 +475,30 @@ TEXT
 
 
 \appendix
-\section{}    %% Appendix A
+\section{How good is the emulator?}    %% Appendix A
 
-\subsection{}     %% Appendix A1, A2, etc.
+We assess the quality of the Gaussian Process emulator, for a number of outputs that we use for constraining the parameters of JULES.
+
+Although there are a large number of possible metrics  for validating emualators (see https://core.ac.uk/download/pdf/153535018.pdf), we prefer those that give the modeller as far as possible about the performance of the emulator in terms of the output of the model. As such, we wish to relate the performance directly to the model output. Although the uncertainty of the emulator is important, it takes a secondary role to the performance of the mean prediction.
+
+\subsection{Leave-one-out metrics}     %% Appendix A1, A2, etc.
+
+We use a leave-one-out prediction metric to initially assess the quality of our Gaussian Process emulator. Each of the 362 ensemble members which form the "level 1a" constrained ensemble is removed in turn. A Gaussian Process emulator is trained in its absence and then the withheld ensemble member is predicted. Figure \ref{fig:kmloostats_Ylevel1a} shows a summary plot of the actual value against the predicted value (the mean of the Gaussian process), and associated uncertainty (+- 2 standard deviations), for each output. For each output, we include a summary of the performance across the ensemble in the form of the "proportional mean absolute error (PMAE)", which we define as the mean absolute error of predictaion, when that error is expressed as a fraction of the range of the ensemble.
+
+We find that the PMAE ranges from between around 4\% and around 8\% of the range of the ensemble, with the emulator for cSoil\_lnd\_sum performing best (pmae=3.6\%), and c4PFTfrac\_lnd\_sum performing worst (pmae  8.23\%).
+
+As useful as a summary metric is, it is not the whole story. Some emulators perform 
+
+
+%%% TWO-COLUMN FIGURES
+%
+%%f
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/kmloostats_Ylevel1a.pdf}
+\caption{Leave-one-out summaries }
+\label{fig:kmloostats_Ylevel1a}
+\end{figure*}
+
 
 
 \noappendix       %% use this to mark the end of the appendix section. Otherwise the figures might be numbered incorrectly (e.g. 10 instead of 1).
