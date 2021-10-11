@@ -479,14 +479,19 @@ TEXT
 
 We assess the quality of the Gaussian Process emulator, for a number of outputs that we use for constraining the parameters of JULES.
 
-Although there are a large number of possible metrics  for validating emualators (see https://core.ac.uk/download/pdf/153535018.pdf), we prefer those that give the modeller as far as possible about the performance of the emulator in terms of the output of the model. As such, we wish to relate the performance directly to the model output. Although the uncertainty of the emulator is important, it takes a secondary role to the performance of the mean prediction.
+Although there are a large number of possible metrics  for validating emualators (see https://core.ac.uk/download/pdf/153535018.pdf), we prefer those that give the modeller as far as possible about the performance of the emulator in terms of the output of the model, and the context of the entire ensemble. As such, we wish to relate the performance directly to the model output. Although the uncertainty estimate of a particular the emulator prediction is important, it takes a secondary role to the performance of the posterior mean prediction in our work.
 
 \subsection{Leave-one-out metrics}     %% Appendix A1, A2, etc.
 
-We use a leave-one-out prediction metric to initially assess the quality of our Gaussian Process emulator. Each of the 362 ensemble members which form the "level 1a" constrained ensemble is removed in turn. A Gaussian Process emulator is trained in its absence and then the withheld ensemble member is predicted. Figure \ref{fig:kmloostats_Ylevel1a} shows a summary plot of the actual value against the predicted value (the mean of the Gaussian process), and associated uncertainty (+- 2 standard deviations), for each output. For each output, we include a summary of the performance across the ensemble in the form of the "proportional mean absolute error (PMAE)", which we define as the mean absolute error of predictaion, when that error is expressed as a fraction of the range of the ensemble.
+We use a leave-one-out prediction metric to initially assess the quality of our Gaussian Process emulators. For each of the outputs of ineterest, each of the 362 ensemble members which form the "level 1a" constrained ensemble is removed in turn. A Gaussian Process emulator is trained in its absence and then the withheld ensemble member is predicted. Figures \ref{fig:kmloostats_Y_level1a} and \ref{fig:kmloostats_YAnom_level1a}  show a summary plots of the actual value against the predicted value (the mean of the Gaussian process), and associated uncertainty (+- 2 standard deviations), for each output, for both "modern values", and "anomaly", or change in the output over the duration of the simulation. For each output, we include a summary of the performance across the ensemble in the form of the "proportional mean absolute error (PMAE)", which we define as the mean absolute error of prediction, when that error is expressed as a fraction of the range of the ensemble.
 
-We find that the PMAE ranges from between around 4\% and around 8\% of the range of the ensemble, with the emulator for cSoil\_lnd\_sum performing best (pmae=3.6\%), and c4PFTfrac\_lnd\_sum performing worst (pmae  8.23\%).
+For "modern value", We find that the PMAE ranges from between around 4\% and around 8\% of the range of the ensemble, with the emulator for cSoil\_lnd\_sum performing best (pmae=3.6\%), and c4PFTfrac\_lnd\_sum performing worst (pmae  7.86\%).
 
+For "anomaly", we find a similar range, with the emulator for npp anomaly scoring a PMAE of 4.04\% and the poorest performance, of cVeg anomaly scoring a PMAE of 8.53\%. It is worth noting that the latter performance looks poor when viewed in a prediction plot (figure \ref{fig:kmloostats_YAnom_level1a}) *need to label the subplots here*.
+
+The prediction plot for cVeg anomaly shows a poor relationship between predicted ensemble member value and the actual value, when plotted for all held-out ensemble members.
+
+\subsection{Predicting members that satisfy level2 constraints} 
 As useful as a summary metric is, it is not the whole story. Some emulators perform 
 
 
@@ -494,9 +499,19 @@ As useful as a summary metric is, it is not the whole story. Some emulators perf
 %
 %%f
 \begin{figure*}[t]
-\includegraphics[width=12cm]{./graphics/kmloostats_Ylevel1a.pdf}
+\includegraphics[width=12cm]{./graphics/kmloostats_Y_level1a.pdf}
 \caption{Leave-one-out summaries }
-\label{fig:kmloostats_Ylevel1a}
+\label{fig:kmloostats_Y_level1a}
+\end{figure*}
+
+
+%%% TWO-COLUMN FIGURES
+%
+%%f
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/kmloostats_YAnom_level1a.pdf}
+\caption{Leave-one-out summaries }
+\label{fig:kmloostats_YAnom_level1a}
 \end{figure*}
 
 
