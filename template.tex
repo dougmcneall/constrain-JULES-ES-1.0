@@ -491,10 +491,6 @@ For "anomaly", we find a similar range, with the emulator for npp anomaly scorin
 
 The prediction plot for cVeg anomaly shows a poor relationship between predicted ensemble member value and the actual value, when plotted for all held-out ensemble members.
 
-\subsection{Predicting members that satisfy level2 constraints} 
-As useful as a summary metric is, it is not the whole story. Some emulators perform 
-
-
 %%% TWO-COLUMN FIGURES
 %
 %%f
@@ -513,6 +509,39 @@ As useful as a summary metric is, it is not the whole story. Some emulators perf
 \caption{Leave-one-out summaries }
 \label{fig:kmloostats_YAnom_level1a}
 \end{figure*}
+
+\subsection{Predicting members that satisfy level2 constraints} 
+
+A useful measure of the practical utility of our emulator is the accuracy with which we can predict if a given input configuration will produce model output that conforms to a set of constraints. Here, we focus on the accuracy of our emulator for predicting ensemble members that conform to our reasonable "level2" constraints. These ensemble members produce output that is reasonable in a very broad way - roughly consistent with a functioning carbon cycle, our observations of the world, and the CMIP6 ensemble, but not directed at a particular set of observations.
+
+We perform a Leave-one-out cross validation on the outputs that we use for the level2 constraint, namely the modern-day value of the global sum of NBP, NPP, soil carbon and vegetation carbon. We show the results of the leave-one-out posterior mean predictions in fig. \ref{fig:Y_const_loo}. If we treat the posterior mean predictions as model runs, and constrain them using the same thresholds as the level 2 results, we can convert them into a binary forecast for whether they are "in" or "out" of the constraint. While this loses some information, it is a useful summary. We predict 19 ensemble members correctly as "in" the constraints, and 309 correctly as "out". We predict 18 incorrectly as "out" when they should be "in" (false negative) and 16 incorrectly as "in" when they should be "out". A confusion matrix summarising these results is presented in \ref{table:level_2_confusion}. We use the R verification package (cite) to calculate a number of skill scores, including the Equitable Threat Score (ETS), which we calculate at 0.31, and the Heidike Skill Score (HSS), which we calculate at 0.47. These scores (as well as the raw numbers) indicate that we have a predictive system, which could well be improved.
+
+\begin{table*}[t]
+\caption{Confusion matrix for leave-one-out emulator predictions of whether the true model outputs conform to the level 2 output constraints}
+\label{table:level_2_confusion}
+\begin{tabular}{l l r r}
+\tophline
+ &  &  & Emulator \\ 
+& & In &  Out\\
+Model & In & 19 &  18 \\
+ & Out & 16 & 309 \\
+
+\bottomhline
+\end{tabular}
+\belowtable{} % Table Footnotes
+
+\end{table*}
+
+Studying fig. \ref{fig:Y_const_loo}, we see that a possible culprit for many of the constraint prediction errors is the relatively poor quality of the emulator for vegetation carbon (cVeg). That emulator predicts a relatively large number of ensmeble members to have a lower vegetation carbon that we see in reality, when the true vegetation is high. This leads to a number of "false negatives". Conversely, when the vegetation carbon is relatively low, there are a small number over-predicted, leading to false positives. This is not a consistent bias, so we cannot simply add a discrepancy value all across input space, more subtlety is required in order to improve the emulator and predictions.
+
+
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/Y_const_loo.pdf}
+\caption{Leave-one-out summaries }
+\label{fig:Y_const_loo}
+\end{figure*}
+
+
 
 
 
