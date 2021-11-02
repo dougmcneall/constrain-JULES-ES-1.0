@@ -260,53 +260,52 @@ We use Fourier Amplitiude Sensitivity Test (FAST) as a further measure of global
 If we were asked to decide which parameters to exclude a set of parameters for a new ensemble, which would we choose? One way to choose might be to exclude those parameters which have little effect on \emph{any} model output of interest. For this ensemble we find these by ranking the inputs by their summarising their OAAT effect across all outputs. Choosing the inputs that are consistently ranked lowest would be a conservative method of excluding inputs.
 
 
-%t
-\begin{table*}[t]
+% latex table generated in R 3.6.3 by xtable 1.8-4 package
+% Tue Nov  2 16:09:44 2021
+\begin{table*}[ht]
 \caption{Ranking sensitivity to inputs}
 \label{table:sens_rank_total}
-\begin{tabular}{l r r r r r}
-\tophline
-parameter & OAT modern value & FAST modern value & OAT anomaly & FAST Anomaly & highest rank \\ 
-\middlehline
-alpha\_io            &            1          &       1      &      1      &       1    &     1 \\ 
-b\_wl\_io              &            2        &          2     &       3   &          2    &     2 \\ 
-lai\_max\_io           &            4      &             6    &        2    &         3    &     2 \\ 
-g\_area\_io            &            3      &            7     &       5   &          6    &      3 \\ 
-n\_inorg\_turnover     &            6      &            3     &       4     &        4    &     3 \\ 
-fd\_io                &            5      &            4     &       6   &          5    &     4 \\ 
-lma\_io               &            7      &            5     &      15     &       13    &     5 \\ 
-nmass\_io             &            9      &            9     &       8      &       7    &     7 \\ 
-r\_grow\_io            &            8      &            8     &       7       &      8    &     7 \\ 
-a\_wl\_io              &           11      &           10     &      11       &      9    &     9 \\ 
-bio\_hum\_cn           &           26      &           27     &       9   &         10    &     9 \\ 
-dqcrit\_io            &           10      &           11     &      18   &         16    &    10 \\ 
-tupp\_io              &           18      &           18     &      10   &         11    &    10 \\ 
-lai\_min\_io           &           14      &           14     &      13 &           12    &    12 \\ 
-tleaf\_of\_io          &           12     &            12     &      12   &         14    &    12 \\ 
-kaps\_roth            &           13      &           13     &      19    &        18    &    13 \\ 
-hw\_sw\_io             &           15      &           16     &      14     &       15    &    14 \\ 
-rootd\_ft\_io          &           17      &           15     &      22  &          21    &    15 \\ 
-f0\_io                &           16      &           17     &      17   &         17    &    16 \\ 
-retran\_l\_io          &           20      &           21     &      16   &         19    &    16 \\ 
-dz0v\_dh\_io           &           19      &           19     &      27    &        25    &    19 \\ 
-g\_root\_io            &           21      &           20     &      23     &       23    &    20 \\ 
-g\_wood\_io            &           22      &           25     &      21  &          20    &    20 \\ 
-nr\_io                &           23      &           23     &      20   &         22    &    20 \\ 
-gs\_nvg\_io            &           30      &           22     &      26    &        24    &    22 \\ 
-dcatch\_dlai\_io       &           27      &           24     &      30    &        31    &    24 \\ 
-tlow\_io              &           24      &           32     &      24    &        29    &    24 \\ 
-l\_vg\_soil            &           25      &           29     &      25    &        26    &    25 \\ 
-retran\_r\_io          &           28      &           26     &      29    &        27    &    26 \\ 
-sigl\_io              &           32      &           30     &      28    &        30    &    28 \\ 
-sorp                 &           29      &           28     &      31    &        28    &    28 \\ 
-knl\_io               &           31      &           31     &      32       &     32    &    31 \\ 
-
-\bottomhline
+\centering
+\begin{tabular}{lrrrrr}
+  \hline
+parameter & OAT\_modern\_value & FAST\_modern\_value & OAT\_anomaly & FAST\_anomaly & min\_rank \\ 
+  \hline
+alpha\_io & 1 & 1 & 2 & 1 & 1 \\ 
+  lai\_max\_io & 9 & 6 & 1 & 3 & 1 \\ 
+  b\_wl\_io & 2 & 2 & 5 & 2 & 2 \\ 
+  fd\_io & 4 & 4 & 3 & 5 & 3 \\ 
+  g\_area\_io & 3 & 7 & 4 & 6 & 3 \\ 
+  n\_inorg\_turnover & 6 & 3 & 6 & 4 & 3 \\ 
+  lma\_io & 7 & 5 & 11 & 13 & 5 \\ 
+  r\_grow\_io & 5 & 8 & 9 & 8 & 5 \\ 
+  a\_wl\_io & 8 & 9 & 7 & 9 & 7 \\ 
+  nmass\_io & 10 & 10 & 12 & 7 & 7 \\ 
+  bio\_hum\_cn & 32 & 30 & 8 & 10 & 8 \\ 
+  tleaf\_of\_io & 12 & 12 & 10 & 14 & 10 \\ 
+  dqcrit\_io & 14 & 11 & 19 & 16 & 11 \\ 
+  lai\_min\_io & 11 & 13 & 13 & 12 & 11 \\ 
+  tupp\_io & 21 & 17 & 15 & 11 & 11 \\ 
+  kaps\_roth & 13 & 14 & 23 & 19 & 13 \\ 
+  retran\_l\_io & 23 & 19 & 14 & 17 & 14 \\ 
+  hw\_sw\_io & 15 & 16 & 17 & 15 & 15 \\ 
+  rootd\_ft\_io & 16 & 15 & 25 & 20 & 15 \\ 
+  dz0v\_dh\_io & 17 & 20 & 16 & 22 & 16 \\ 
+  f0\_io & 22 & 18 & 18 & 18 & 18 \\ 
+  sigl\_io & 18 & 31 & 30 & 30 & 18 \\ 
+  g\_root\_io & 19 & 21 & 20 & 25 & 19 \\ 
+  gs\_nvg\_io & 20 & 22 & 22 & 23 & 20 \\ 
+  g\_wood\_io & 28 & 25 & 24 & 21 & 21 \\ 
+  nr\_io & 25 & 23 & 21 & 24 & 21 \\ 
+  knl\_io & 24 & 24 & 32 & 32 & 24 \\ 
+  sorp & 26 & 27 & 28 & 28 & 26 \\ 
+  tlow\_io & 29 & 26 & 27 & 29 & 26 \\ 
+  l\_vg\_soil & 30 & 32 & 26 & 26 & 26 \\ 
+  dcatch\_dlai\_io & 27 & 28 & 31 & 31 & 27 \\ 
+  retran\_r\_io & 31 & 29 & 29 & 27 & 27 \\ 
+   \hline
 \end{tabular}
 \belowtable{} % Table Footnotes
-
 \end{table*}
-
 
 
 \begin{figure*}[t]
@@ -475,6 +474,18 @@ TEXT
 
 
 \appendix
+
+\section{Ensemble design}
+The ensemble has 500 members, each with a different setting of 32 uncertain parameters. Many of these parameters have different values for the 13 different plant functional types (PFTs) in JULES. If each of these were perturbed independently, there would potentially be an intolerably large input space. to combat this explosion of dimensions, we decided to perturb each of the PFTs together, by a multiplication factor for each parameter. 
+
+We elicited reasonable multiplication factors from the modeller (Wiltshire), based on the uncertainty of each parameter, and an estimate of the limits of the parameters at which the model would even run. The multiplication factors were perturbed in a maximim Latin Hypercube designusing the R package LHS (*cite*). The design chosed was the Latin hypercube with the largest minimum distance, from a set of 10,000 generated candidates.
+
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/lhs_range.pdf}
+\caption{Parameter multiplication factor ranges the ensemble design.}
+\label{fig:lhs_range}
+\end{figure*}
+
 \section{How good is the emulator?}    %% Appendix A
 
 We assess the quality of the Gaussian Process emulator, for a number of outputs that we use for constraining the parameters of JULES.
@@ -549,6 +560,22 @@ It appears that the initial design for the experiment was set too wide, with man
 \end{figure*}
 
 
+
+\section{Further sensitivity analysis}
+
+Summaries of FAST sensitivity analysis can be found below.
+
+\begin{figure*}[t]
+\includegraphics[width=6cm]{./graphics/FAST_sensmat_Y_level1a.pdf}
+\caption{FAST summary}
+\label{fig:FAST_sensmat_Y_level1a}
+\end{figure*}
+
+\begin{figure*}[t]
+\includegraphics[width=6cm]{./graphics/FAST_sensmat_YAnom_level1a.pdf}
+\caption{FAST summary}
+\label{fig:FAST_sensmat_YAnom_level1a}
+\end{figure*}
 
 
 
