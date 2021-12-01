@@ -167,6 +167,41 @@ An extension to consider: what happens when we project the constrained space for
 \section{JULES behaviour across the ensemble}
 
 \subsection{Ensemble design}
+The ensemble has 500 members, each with a different setting of 32 uncertain parameters. Many of these parameters have different values for the 13 different plant functional types (PFTs) in JULES. If each of these were perturbed independently, there would potentially be an intolerably large input space. to combat this explosion of dimensions, we decided to perturb each of the PFTs together, by a multiplication factor for each parameter. 
+
+We elicited reasonable multiplication factors from the modeller (Wiltshire), based on the uncertainty of each parameter, and an estimate of the limits of the parameters at which the model would even run. The multiplication factors were perturbed in a maximim Latin Hypercube designusing the R package LHS (*cite*). The design chosed was the Latin hypercube with the largest minimum distance, from a set of 10,000 generated candidates.
+
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/lhs_range.pdf}
+\caption{Parameter multiplication factor ranges the ensemble design.}
+\label{fig:lhs_range}
+\end{figure*}
+
+\subsection{Carbon cycle behaviour summaries}
+
+For our primary analysis, we study summaries of the global carbon cycle behaviour, consisting of the global sum or mean of a number of carbon cycle indicators. Time series of these indicators for each ensemble member over the entire run can be seen in fig. \ref{fig:plot-carbon-cycle-timeseries-primary-1}. It is clear that perturbing parameters over a wide ensemble design produces a wide range of model behaviour, from a carbon cycle that is apparently missing, to one that embodies and cycles a large amount of carbon. while the design draws uniformly from each parameter, it is clear that model outputs cluster together in preferred behaviours.
+
+In many indicators, perturbing parameters affects the overall level of the carbon cycle property, with it's behaviour through time being only a secondary source of variance at, say, the end of the model run. That is, the carbon cycle level at the end of the run is more closely related to its level at the beginning of the run than it is to its change over time. Having said that, there is variability in the behaviour of the carbon cycle over time, as can be seen in fig. \ref{fig:plot-carbon-cycle-anomaly-timeseries-1}. Here, we examine a small selection of the most important indicators, and examine their change in behaviour over time, or anomaly from the starting value. We see for example, that changing the parameters can make soil and vegetation carbon increase or decrease over the simulated century and a half of the model run. 
+
+%%% TWO-COLUMN FIGURES
+%
+%%f
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/plot-carbon-cycle-timeseries-primary-1.pdf}
+\caption{Primary carbon cycle quantities in the JULES ensemble.}
+\label{fig:plot-carbon-cycle-timeseries-primary-1}
+\end{figure*}
+
+%%% TWO-COLUMN FIGURES
+%
+%%f
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/plot-carbon-cycle-anomaly-timeseries-1}
+\caption{Carbon cycle quantities in the JULES ensemble.}
+\label{fig:plot-carbon-cycle-anomaly-timeseries-1}
+\end{figure*}
+
+
 
 \subsection{Failure analysis}
 
@@ -195,22 +230,7 @@ Combine the plot for these two? - pairs of both failures and $f0\_io b\_wl\_io$ 
 
 
 
-%%% TWO-COLUMN FIGURES
-%
-%%f
-\begin{figure*}[t]
-\includegraphics[width=12cm]{./graphics/plot-carbon-cycle-timeseries-primary-1.pdf}
-\caption{Primary carbon cycle quantities in the JULES ensemble.}
-\end{figure*}
 
-
-%%% TWO-COLUMN FIGURES
-%
-%%f
-\begin{figure*}[t]
-\includegraphics[width=12cm]{./graphics/plot-carbon-cycle-anomaly-timeseries-1}
-\caption{Carbon cycle quantities in the JULES ensemble.}
-\end{figure*}
 
 
 
@@ -235,10 +255,10 @@ Combine the plot for these two? - pairs of both failures and $f0\_io b\_wl\_io$ 
 
 
 
-\subsection{Sensitivity Analysis}
+\section{Sensitivity Analysis}
 We use the emulator fit to a range of outputs to perform several types of sensitivity analysis.
 
-\subsubsection{Global one-at-a-time Sensitivity}
+\subsection{Global one-at-a-time Sensitivity}
 
 A one-at-a-time (OAAT) sensitivity gives a simple and easy-to-interpret measure of the impact of each input on a variety of outputs, but does not include the effects of any interactions between inputs (for example, a non-linear change in model outputs as two or more inputs vary together).  
 
@@ -250,62 +270,10 @@ We sample from the input space in a one-at-a-time fashion: each input is sampled
 
 Different model outputs are clearly sensitive to different model inputs, and so we also seek ways of summarising sensitivity across model outputs. One method is simply to find the mean effect across model outputs. Sensitivities are normalised so that they lie in a $[0 -1]$ range for each output. Summary measures for each input are then averaged across all outputs, and the plotted inputs are ranked by their average influence across all outputs. Individual sensitivities and summaries can be seen in fig. \ref{fig:oat_var_sensmat_level1a_Y} for the modern value, and in fig. \ref{fig:oat_var_sensmat_level1a_YAnom} for the change over the historic period of the ensemble. 
 
-\subsubsection{FAST sensitivity analysis}
+\subsection{FAST sensitivity analysis}
 
 We use Fourier Amplitiude Sensitivity Test (FAST) as a further measure of global sensitivity of the model outputs to its inputs. The test is administered as the FAST99 algorithm of \cite{Saltelli1999}, through the R package Sensitivity \citep{Rsensitivity}. Again, this algorithm requires a large number of model runs, and so we use emulated model outputs in place of dedicated model runs. This comes at the cost of a risk of innacuracy, as the emulated model outputs won't perfectly reproduce the true model runs at the corresponding inputs. However, the emulator is shown to work adequately for the model outputs in section \ref{ssec:emulator_accuracy}. 
 
-\subsubsection{Choosing or excluding inputs}
-
-
-If we were asked to decide which parameters to exclude a set of parameters for a new ensemble, which would we choose? One way to choose might be to exclude those parameters which have little effect on \emph{any} model output of interest. For this ensemble we find these by ranking the inputs by their summarising their OAAT effect across all outputs. Choosing the inputs that are consistently ranked lowest would be a conservative method of excluding inputs.
-
-
-% latex table generated in R 3.6.3 by xtable 1.8-4 package
-% Tue Nov  2 16:09:44 2021
-\begin{table*}[ht]
-\caption{Ranking sensitivity to inputs}
-\label{table:sens_rank_total}
-\centering
-\begin{tabular}{lrrrrr}
-  \hline
-parameter & OAT\_modern\_value & FAST\_modern\_value & OAT\_anomaly & FAST\_anomaly & min\_rank \\ 
-  \hline
-alpha\_io & 1 & 1 & 2 & 1 & 1 \\ 
-  lai\_max\_io & 9 & 6 & 1 & 3 & 1 \\ 
-  b\_wl\_io & 2 & 2 & 5 & 2 & 2 \\ 
-  fd\_io & 4 & 4 & 3 & 5 & 3 \\ 
-  g\_area\_io & 3 & 7 & 4 & 6 & 3 \\ 
-  n\_inorg\_turnover & 6 & 3 & 6 & 4 & 3 \\ 
-  lma\_io & 7 & 5 & 11 & 13 & 5 \\ 
-  r\_grow\_io & 5 & 8 & 9 & 8 & 5 \\ 
-  a\_wl\_io & 8 & 9 & 7 & 9 & 7 \\ 
-  nmass\_io & 10 & 10 & 12 & 7 & 7 \\ 
-  bio\_hum\_cn & 32 & 30 & 8 & 10 & 8 \\ 
-  tleaf\_of\_io & 12 & 12 & 10 & 14 & 10 \\ 
-  dqcrit\_io & 14 & 11 & 19 & 16 & 11 \\ 
-  lai\_min\_io & 11 & 13 & 13 & 12 & 11 \\ 
-  tupp\_io & 21 & 17 & 15 & 11 & 11 \\ 
-  kaps\_roth & 13 & 14 & 23 & 19 & 13 \\ 
-  retran\_l\_io & 23 & 19 & 14 & 17 & 14 \\ 
-  hw\_sw\_io & 15 & 16 & 17 & 15 & 15 \\ 
-  rootd\_ft\_io & 16 & 15 & 25 & 20 & 15 \\ 
-  dz0v\_dh\_io & 17 & 20 & 16 & 22 & 16 \\ 
-  f0\_io & 22 & 18 & 18 & 18 & 18 \\ 
-  sigl\_io & 18 & 31 & 30 & 30 & 18 \\ 
-  g\_root\_io & 19 & 21 & 20 & 25 & 19 \\ 
-  gs\_nvg\_io & 20 & 22 & 22 & 23 & 20 \\ 
-  g\_wood\_io & 28 & 25 & 24 & 21 & 21 \\ 
-  nr\_io & 25 & 23 & 21 & 24 & 21 \\ 
-  knl\_io & 24 & 24 & 32 & 32 & 24 \\ 
-  sorp & 26 & 27 & 28 & 28 & 26 \\ 
-  tlow\_io & 29 & 26 & 27 & 29 & 26 \\ 
-  l\_vg\_soil & 30 & 32 & 26 & 26 & 26 \\ 
-  dcatch\_dlai\_io & 27 & 28 & 31 & 31 & 27 \\ 
-  retran\_r\_io & 31 & 29 & 29 & 27 & 27 \\ 
-   \hline
-\end{tabular}
-\belowtable{} % Table Footnotes
-\end{table*}
 
 
 \begin{figure*}[t]
@@ -321,7 +289,7 @@ alpha\_io & 1 & 1 & 2 & 1 & 1 \\
 \end{figure*}
 
 
-\subsubsection{Sensitivity of constraint outputs}
+\subsection{Sensitivity of constraint outputs}
 
 We add detail to our one-at-at-time sensitivity of important outputs - those that we use for constraining JULES. We plot the emulated mean of the each of four outputs - NBP, NPP, vegetation carbon and soil carbon, as each parameter in increased from its minimum to maximum range.
 
@@ -332,8 +300,75 @@ We add detail to our one-at-at-time sensitivity of important outputs - those tha
 \end{figure*}
 
 
+\subsection{Monte Carlo Filtering}
 
-\subsection{Constraining the historical carbon cycle}
+Monte Carlo filtering (MCF) is a type of sensitivity analysis that integrates well with our aim of constraining model behaviour given a large ensemble using History matching. The idea of MCF is to identify inputs that have an influence on whether the behaviour of the model falls within or outside acceptable bounds of behaviour. This is done by splitting samples of model behaviour into those that do or don't meet some constraint, and then examining differences between the cumulative distributions of the corresponding input variables.
+
+A description of MCF and its uses can be found in \ref{pianosa}, and using MCF to estimate parameter sensitivity in a land surface model can be found in \ref{mcneall20}.
+
+As in that paper, we draw a large sample of 10000 parameter combinations, uniformly from the input parameter distributions constrained to level1a. We use the emulator to estimate the true model output for each of the four "constraining variable, NPP, NBP, cVeg and cSoil at these parameter values. We perform a two-sample KS test on the cumulative distributions of those input samples where the mean of the emulator predicts that the model would be within or outside of the modellers level 2 constraints. We use this KS statistic as an indicator of the sensitivity of the model output to each input. We summarise the sensitivity in figure \ref{fig:MCF_sensmat_Yconst_level1a}
+
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/MCF_sensmat_Yconst_level1a}
+\caption{MCF sensitivity summary for global summary of the ``modern value" of the constraint variables (nbp, npp, cVeg, cSoil)}
+\label{fig:MCF_sensmat_Yconst_level1a}
+\end{figure*}
+
+\subsection{Choosing or excluding inputs}
+
+If we were asked to decide which parameters to exclude a set of parameters for a new ensemble, which would we choose? One way to choose might be to exclude those parameters which have little effect on \emph{any} model output of interest. For this ensemble we find these by ranking the inputs by their summarising their OAAT effect across all outputs. Choosing the inputs that are consistently ranked lowest would be a conservative method of excluding inputs.
+
+% latex table generated in R 3.6.3 by xtable 1.8-4 package
+% Wed Dec  1 12:36:34 2021
+\begin{table*}[ht]
+\centering
+\begin{tabular}{lrrrrrr}
+  \hline
+ & OAT\_modern & FAST\_modern & OAT\_anomaly & FAST\_anomaly & MCF\_modern\_value & min\_rank \\ 
+  \hline
+alpha\_io & 1 & 1 & 2 & 1 & 1 & 1 \\ 
+  lai\_max\_io & 9 & 7 & 1 & 2 & 7 & 1 \\ 
+  b\_wl\_io & 2 & 2 & 5 & 3 & 4 & 2 \\ 
+  fd\_io & 4 & 4 & 3 & 4 & 2 & 2 \\ 
+  g\_area\_io & 3 & 6 & 4 & 6 & 6 & 3 \\ 
+  n\_inorg\_turnover & 6 & 3 & 6 & 5 & 5 & 3 \\ 
+  r\_grow\_io & 5 & 8 & 9 & 8 & 3 & 3 \\ 
+  lma\_io & 7 & 5 & 11 & 12 & 24 & 5 \\ 
+  a\_wl\_io & 8 & 9 & 7 & 7 & 11 & 7 \\ 
+  bio\_hum\_cn & 32 & 26 & 8 & 10 & 19 & 8 \\ 
+  nmass\_io & 10 & 10 & 12 & 9 & 8 & 8 \\ 
+  kaps\_roth & 13 & 12 & 23 & 17 & 9 & 9 \\ 
+  hw\_sw\_io & 15 & 15 & 17 & 14 & 10 & 10 \\ 
+  tleaf\_of\_io & 12 & 14 & 10 & 15 & 13 & 10 \\ 
+  dqcrit\_io & 14 & 11 & 19 & 16 & 18 & 11 \\ 
+  lai\_min\_io & 11 & 13 & 13 & 11 & 12 & 11 \\ 
+  tupp\_io & 21 & 21 & 15 & 13 & 16 & 13 \\ 
+  retran\_l\_io & 23 & 20 & 14 & 19 & 17 & 14 \\ 
+  rootd\_ft\_io & 16 & 16 & 25 & 20 & 14 & 14 \\ 
+  l\_vg\_soil & 30 & 32 & 26 & 27 & 15 & 15 \\ 
+  dz0v\_dh\_io & 17 & 18 & 16 & 22 & 27 & 16 \\ 
+  f0\_io & 22 & 17 & 18 & 18 & 22 & 17 \\ 
+  sigl\_io & 18 & 31 & 30 & 32 & 30 & 18 \\ 
+  g\_root\_io & 19 & 19 & 20 & 24 & 21 & 19 \\ 
+  gs\_nvg\_io & 20 & 22 & 22 & 23 & 29 & 20 \\ 
+  retran\_r\_io & 31 & 30 & 29 & 26 & 20 & 20 \\ 
+  g\_wood\_io & 28 & 23 & 24 & 21 & 26 & 21 \\ 
+  nr\_io & 25 & 24 & 21 & 25 & 23 & 21 \\ 
+  knl\_io & 24 & 25 & 32 & 30 & 25 & 24 \\ 
+  sorp & 26 & 29 & 28 & 31 & 28 & 26 \\ 
+  dcatch\_dlai\_io & 27 & 27 & 31 & 28 & 31 & 27 \\ 
+  tlow\_io & 29 & 28 & 27 & 29 & 32 & 27 \\ 
+   \hline
+   \end{tabular}
+\belowtable{} % Table Footnotes
+\end{table*}
+
+
+
+
+
+
+\section{Constraining the historical carbon cycle}
 
 We can constrain both the historical behaviour of the model and the model parameter input space by comparison of the model behaviour with observations and other model simulations.
 
@@ -342,7 +377,7 @@ We use a number of strategies for model constraint.
 We find the most effective outputs for constraining model inputs and behaviour. ** One at a time constraint analysis, needs doing **
 
 
-\subsubsection{Direct constraint of ensemble members}
+\subsection{Direct constraint of ensemble members}
 
 The simplest way to constrain the historical behaviour of the carbon cycle is by removing from the ensemble model runs that lead to implausible values of basic carbon cycle quantities in the modern era. These constraints are outlined in table \ref{table:level_2_constraints}.
 
@@ -355,6 +390,8 @@ The modeller (Wiltshire) gave ranges for Vegetation and Soil carbon stocks, NBP 
 Because of this wide tolerance of modern behaviours, we perhaps should not be too optimistic that large regions of input space, or potential histories of the carbon cycle, should be excluded (alternatively that the space of possible histories and input space should be overly constrained).
 
 However, even given the wide ranges of tolerable behaviour, a large number of our ensemble members are excluded. Of the 362 ensemble members that run, and have non-zero carbon cycle properties (constraint level 1a), only 37 (10.2\%) fall within the wide bounds set by the modeller.
+
+Given that only a small number of ensemble members fall within the constraints, we do however see quite diverse behaviour in the ensemble. For example, we see the direct constraint of historical soil and vegetation carbon pools in figure \ref{fig:vegC-soilC-constrained}. The constraint has ruled out ensemble members with lower (and occiasionally higher) pools of both soil and vegetation carbon. However, it has ruled, and therefore offers an "emergent" constraint on ensemble members with a declining soil carbon pool. It has not produced a similar constraint on ensemble members with a declining vegetation carbon pool.
 
 %% TWO-COLUMN TABLE
 %%% The different columns must be seperated with a & command and should
@@ -385,32 +422,6 @@ Vegetation Carbon stock & 300 GtC & 800 GtC \\
 \label{fig:level_2_constraints_hists}
 \end{figure*}
 
-
-\subsection{Constraining input space with an emulator}
-
-Constraining the ensemble my directly rejecting implausible members gives us a useful but rough outline of the input space where the model might be said to behave "well". With only 37 ensemble members, we are able to outline the valid 32 dimensional input space only very approximately. For example the pairs plot in figure \ref{} shows the two-dimensional projections of the retained ensemble members, and more densely populated regions show where the model is more likely to produce valid output.
-
-\begin{figure*}[t]
-\includegraphics[width=12cm]{./graphics/pairs_level2_inputs.pdf}
-\caption{level 2 pairs density plot.}
-\label{fig:pairs_level2_inputs}
-\end{figure*}
-
-However, we can improve significantly on the visualisation of the constrained input space with the help of an emulator. 
-
-We fit a Gaussian process emulator to each of the constraint outputs noted in table 1, and for the 356 members of the ensemble that have a non-zero carbon cycle, defined as constraint level 1a. We take $10e5$ samples uniformly from across normalised input space (** note, does this need to be amended to the level 1a space?**), and reject all emulated members where the corresponding mean predicted output does not conform to the level 2 constraints. We plot two dimensional projections of the the density of accepted points in figure \ref{fig:pairs_dens_level1a_km}, colour coded by relative density. Blue areas show regions where there is a high concentration of accepted points, and we would expect a high probability of a model run in at this input location producing a valid carbon cycle.
-
-
-\begin{figure*}[t]
-\includegraphics[width=12cm]{./graphics/pairs_dens_level2_km.pdf}
-\caption{level 2 pairs density plot}
-\label{fig:pairs_dens_level1a_km}
-\end{figure*}
-
-
-
-
-
 %%% TWO-COLUMN FIGURES
 %
 %%f
@@ -421,7 +432,6 @@ We fit a Gaussian process emulator to each of the constraint outputs noted in ta
 \end{figure*}
 
 %%% TWO-COLUMN FIGURES
-
 
 \subsubsection{Cumulative NBP constraint}
 
@@ -437,8 +447,37 @@ It turns out that constraining with cumulative NBP, and comparing to the AR6 spr
 \includegraphics[width=12cm]{./graphics/cumulative_nbp_constrained_pairs.pdf}
 \caption{Constraint of historical total land carbon pools (veg + soil)}
 \label{fig:total-land-carbon-sink-1}
+\end{figure*}` 
+
+
+\subsection{Constraining input space with an emulator}
+
+Constraining the ensemble my directly rejecting implausible members gives us a useful but rough outline of the input space where the model might be said to behave "well". With only 37 ensemble members, we are able to outline the valid 32 dimensional input space only very approximately. For example the pairs plot in figure \ref{} shows the two-dimensional projections of the retained ensemble members, and more densely populated regions show where the model is more likely to produce valid output.
+
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/pairs_level2_inputs.pdf}
+\caption{level 2 pairs density plot.}
+\label{fig:pairs_level2_inputs}
 \end{figure*}
-[]
+
+However, we can improve significantly on the visualisation of the constrained input space with the help of an emulator. 
+
+We fit a Gaussian process emulator to each of the constraint outputs noted in table 1, and for the 356 members of the ensemble that have a non-zero carbon cycle, defined as constraint level 1a. We take $10e5$ samples uniformly from across normalised input space (** note, does this need to be amended to the level 1a space?**), and reject all emulated members where the corresponding mean predicted output does not conform to the level 2 constraints. We plot two dimensional projections of the the density of accepted points in figure \ref{fig:pairs_dens_level2_km}, colour coded by relative density. Blue areas show regions where there is a high concentration of accepted points, and we would expect a high probability of a model run in at this input location producing a valid carbon cycle.
+
+
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/pairs_dens_level2_km.pdf}
+\caption{level 2 pairs density plot}
+\label{fig:pairs_dens_level2_km}
+\end{figure*}
+
+
+\section{History matching}
+We note that only a small proportion (37) of the original 500 ensemble members produce output that lies within the basic constraints specified by the modeller. This means that a great majority of runs have output which is outside the input space considered valid, and therefore only a small number of runs are available 
+
+
+
+
 
 \section{HEADING}
 TEXT
@@ -475,16 +514,7 @@ TEXT
 
 \appendix
 
-\section{Ensemble design}
-The ensemble has 500 members, each with a different setting of 32 uncertain parameters. Many of these parameters have different values for the 13 different plant functional types (PFTs) in JULES. If each of these were perturbed independently, there would potentially be an intolerably large input space. to combat this explosion of dimensions, we decided to perturb each of the PFTs together, by a multiplication factor for each parameter. 
 
-We elicited reasonable multiplication factors from the modeller (Wiltshire), based on the uncertainty of each parameter, and an estimate of the limits of the parameters at which the model would even run. The multiplication factors were perturbed in a maximim Latin Hypercube designusing the R package LHS (*cite*). The design chosed was the Latin hypercube with the largest minimum distance, from a set of 10,000 generated candidates.
-
-\begin{figure*}[t]
-\includegraphics[width=12cm]{./graphics/lhs_range.pdf}
-\caption{Parameter multiplication factor ranges the ensemble design.}
-\label{fig:lhs_range}
-\end{figure*}
 
 \section{How good is the emulator?}    %% Appendix A
 
