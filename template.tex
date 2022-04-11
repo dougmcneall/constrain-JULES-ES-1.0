@@ -78,7 +78,7 @@
 
 \begin{document}
 
-\title{Constraining the historic carbon cycle in JULES-ES-1.0}
+\title{Constraining the carbon cycle in JULES-ES-1.0}
 
 % \Author[affil]{given_name}{surname}
 
@@ -120,11 +120,60 @@
 
 \maketitle
 
-
-
 \begin{abstract}
 
-We constrain a large ensemble of JULES-ES-1.0 using modern observations of the carbon cycle. We explore the resulting constraint on the behaviour of the carbon cycle during the historical period.
+Land surface models are an important tool in the study of climate change and its impacts, but their use can be hampered by uncertainties in the differences between the models and the real world. Uncertainty quantification (UQ) methods have been developed in order to quantify those differences, how to minimise them, and how to asses their impact on the use of models in policy advice. In this study we use UQ methods to constrain a large ensemble of JULES-ES-1.0 using modern observations of the carbon cycle. We provide information to modellers about the sensitivity of model outputs to changes in uncertain inputs, and identify a model discrepancy which is difficult to remove by tuning those uncertain inputs. We explore the resulting constraint on the behaviour of the carbon cycle during the historical period.
+
+As the land surface model is computationally expensive, we use a statistical proxy, termed an emulator, trained on a carefully selected perturbed parameter ensemble of model runs, driven by a historical climate reanalysis . We take an "iterated refocussing", or "History Matching" approach to constraining JULES, first running an initial ensemble and training the emulator, before using it to choose a second wave of ensemble members consistent with historical land surface observations and expectations.
+
+We provide an ensemble of JULES runs that are statistically consistent with past land surface behaviour, and an associated constraint of the joint distribution of input parameters. We show that an emulator is a useful tool for providing modellers and policymakers information about the nature of the Earth system configuration of the land surface model JULES.
+
+\end{abstract}
+
+\copyrightstatement{TEXT} %% This section is optional and can be used for copyright transfers.
+
+\section{Analysis plan}
+
+\subsection{\textcolor{red}{AJW Notes}}
+\textcolor{red}{A few thoughts on this paper following our previous discussions. This paper describes the ensemble, the available data and the emulator? The ensemble is focused on the terrestrial carbon sink. The next paper focuses on constraining the historical C sink and possibly a third looks at the carbon feedback terms.}
+
+\textcolor{red}{This paper therefore presents the original 500 members of wave 1, followed by the 500 of wave 2. wave 2 by design is broad but less broad than 1 aimed a filling a tighter parameter space, but importantly is a plausible set of experiments from which further work can be developed. wave 2 should therefore be compared to CMIP and TRENDY simulations. We also learn alot about our model and its sensitivities using the analyses presented which is a result in itself and gives us a decent emulator to use going forward}
+
+
+
+------
+
+Our guiding principles for this paper: what does comparing the model output with observations tell us about where to run the model, and also about the history of the carbon cycle?
+
+Analyses
+\begin{enumerate}
+    \item Introduction, motivation and JULES context
+    \item Run failures
+    \item History matching and constraint
+    \item Sensitivity analysis
+    \item Discrepancy hunting
+\end{enumerate}
+
+Supplementary or in development
+
+\begin{enumerate}
+    \item Emulator performance
+    \item Comparison with other ensembles
+    \item History matching
+    \item Sensitivity analysis
+    \item Discrepancy hunting
+\end{enumerate}
+
+An extension to consider: what happens when we project the constrained space forwards through time. For this, we need runs using future boundary conditions.
+
+\introduction  %% \introduction[modified heading if necessary]
+
+\begin{enumerate}
+    \item Jules version, aims, context 
+    \item Uncertainty Quantification for model development
+\end{enumerate}
+
+Top-down approach, compared to bottom-up approach of e.g Baker et al.
 
 We run Jules-ES-1.0 in a 500-member ensemble, driven by historical reanalysis. Each ensemble member has a different configuration of 32 input parameters, identified as potentially important in influencing land surface dynamics important by the  model developers. The parameters were perturbed randomly, in a Latin hypercube configuration, and within ranges defined by the model developers as being likely to at least produce output from the model.
 
@@ -137,39 +186,26 @@ Finding model outputs which match modern observations, we identify parts of inpu
 Having constrained both input parameter space and model outputs using modern observations of the carbon cycle, we examine the impact of the modelled carbon budget through time. What is the potential for constraining the carbon budget using only modern observations? What happens if we extend those observations back through time?
 
 Our analysis informs the construction a new ensemble design, with ensemble members picked to lie within the input space not ruled out by a comparison of the model behaviour with modern observations. 
-\end{abstract}
 
+\section{Constraining the historical carbon cycle}
 
-\copyrightstatement{TEXT} %% This section is optional and can be used for copyright transfers.
+Our aim was to run an iterated experiment to create an ensemble of JULES runs that would allow  a number of different types of analysis. Our objectives were 1) to find an ensemble of JULES runs that would represent (and span) uncertainty in both model input parameters and historical land surface behaviour, thus creating a basis ensemble for a UQ analysis of past behaviour and future projections. 2) Explore if some uncertain input parameters could be constrained by comparison of the model outputs with observational data and 3) To create an ensemble that could be used for sensitivity analyses, identifying the most important inputs. 
 
-\section{Analysis plan}
+All of these objectives are well served by creating an ensemble that allows surrogate models, or emulators, to be trained and used in place of the full simulator.
 
-Our guiding principles for this paper: what does comparing the model output with observations tell us about where to run the model, and also about the history of the carbon cycle?
+Many climate model experiments have only a limited amount of computational budget, and modellers must decide how to spend that budget. While JULES-ES-1p0 is relatively cheap, and in practice we were not constrained (within reason) by computational budget, we decided to mimic a full climate model experiment. Such an experiment might have access to a few tens to a few thousand model runs. We decided to run the experiment with approximately 1000 runs, somewhere near the middle of this range.
 
-Suggested paper structure
-\begin{enumerate}
-    \item Introduction. Motivation
-    \item Ensemble
-\end{enumerate}
+Our experiment was inspired by the history matching procedure, otherwise known as "iterated refocussing", in which an initial ensemble is run, ensemble members (and the associated input space) deemed too far from reality are ruled out, and a further wave of ensemble members are run in the input space that has not been ruled out yet. At each stage, a surrogate model, or emulator is trained on the model outputs, predicting model output at inputs not yet run. This emulator is used to predict which inputs will not be ruled out in the next wave, and for new design points to be selected from these candidates. The emulator should become more accurate in the valid input space at each wave. As this was an exploratory design process, we did not attempt to optimise this process by selecting an ideal number of runs for each stage, but instead chose reasonable numbers, before deciding to go further if necessary.
 
-An extension to consider: what happens when we project the constrained space forwards through time. For this, we need runs using future boundary conditions.
+Our experiment has a "top-down" structure, in that we attempt to constrain input parameter space (and therefore model behaviour) by comparison to observational data, starting from a global overview. We use very little prior information to choose initial input parameter ranges, we run the model globally, and we compare globally averaged model output to globally averaged observations, starting with a few important properties, and working towards more detail. An alternative experiment structure might be classed as "bottom up" - starting with standard parameters and working away from them, focusing on individual processes within the model, and comparing with much more focused model output and observations, both in time and in space. Ultimately, both of these types of experiment will be important in integrating new processes into larger models in a model development process.
 
+We set the budget for the initial exploratory ensemble to 500 members, a little over 10 members per input parameter recommended as a rule of thumb by (cite). 
 
-\introduction  %% \introduction[modified heading if necessary]
+The aim of the initial ensemble was to explore the limits of parameter space, and ensure that any future constrained ensemble would be interpolating and not extrapolating from the initial design. For that reason, we implored the model developers to set ranges on the parameter perturbations to be as wide as possible, while still having a good chance of running and at least providing output.
 
-\begin{enumerate}
-    \item Jules version, aims, context 
-    \item Uncertainty Quantification for model development
-\end{enumerate}
+We elicited reasonable multiplication factors from the modeller (Wiltshire), based on the uncertainty of each parameter, and an estimate of the limits of the parameters at which the model would even run. The multiplication factors were perturbed in a space filling design, in order to best cover input space and help build Gaussian process emulators, which can have problems if design points are spaced too closely. We chose a maximim Latin Hypercube design using the R package LHS (*cite*). The design chosed was the Latin hypercube with the largest minimum distance, from a set of 10,000 generated candidates.
 
-
-
-\section{JULES behaviour across the ensemble}
-
-\subsection{Ensemble design}
-The ensemble has 500 members, each with a different setting of 32 uncertain parameters. Many of these parameters have different values for the 13 different plant functional types (PFTs) in JULES. If each of these were perturbed independently, there would potentially be an intolerably large input space. to combat this explosion of dimensions, we decided to perturb each of the PFTs together, by a multiplication factor for each parameter. 
-
-We elicited reasonable multiplication factors from the modeller (Wiltshire), based on the uncertainty of each parameter, and an estimate of the limits of the parameters at which the model would even run. The multiplication factors were perturbed in a maximim Latin Hypercube designusing the R package LHS (*cite*). The design chosed was the Latin hypercube with the largest minimum distance, from a set of 10,000 generated candidates.
+The initial ensemble (designated wave00) started with 500 members, each with a different setting of 32 uncertain parameters. Many of these parameters have different values for the 13 different plant functional types (PFTs) in JULES. If each of these were perturbed independently, there would potentially be an intolerably large input space. To combat this explosion of dimensions, we decided to perturb each of the PFTs together, by a multiplication factor for each parameter. This choice was computationally convenient for a top-down, globally averaged experiment, but we see great potential for optimising the values of these parameters for individual PFTs in further work. 
 
 \begin{figure*}[t]
 \includegraphics[width=12cm]{./graphics/lhs_range.pdf}
@@ -177,33 +213,7 @@ We elicited reasonable multiplication factors from the modeller (Wiltshire), bas
 \label{fig:lhs_range}
 \end{figure*}
 
-\subsection{Carbon cycle behaviour summaries}
-
-For our primary analysis, we study summaries of the global carbon cycle behaviour, consisting of the global sum or mean of a number of carbon cycle indicators. Time series of these indicators for each ensemble member over the entire run can be seen in fig. \ref{fig:plot-carbon-cycle-timeseries-primary-1}. It is clear that perturbing parameters over a wide ensemble design produces a wide range of model behaviour, from a carbon cycle that is apparently missing, to one that embodies and cycles a large amount of carbon. while the design draws uniformly from each parameter, it is clear that model outputs cluster together in preferred behaviours.
-
-In many indicators, perturbing parameters affects the overall level of the carbon cycle property, with it's behaviour through time being only a secondary source of variance at, say, the end of the model run. That is, the carbon cycle level at the end of the run is more closely related to its level at the beginning of the run than it is to its change over time. Having said that, there is variability in the behaviour of the carbon cycle over time, as can be seen in fig. \ref{fig:plot-carbon-cycle-anomaly-timeseries-1}. Here, we examine a small selection of the most important indicators, and examine their change in behaviour over time, or anomaly from the starting value. We see for example, that changing the parameters can make soil and vegetation carbon increase or decrease over the simulated century and a half of the model run. 
-
-%%% TWO-COLUMN FIGURES
-%
-%%f
-\begin{figure*}[t]
-\includegraphics[width=12cm]{./graphics/plot-carbon-cycle-timeseries-primary-1.pdf}
-\caption{Primary carbon cycle quantities in the JULES ensemble.}
-\label{fig:plot-carbon-cycle-timeseries-primary-1}
-\end{figure*}
-
-%%% TWO-COLUMN FIGURES
-%
-%%f
-\begin{figure*}[t]
-\includegraphics[width=12cm]{./graphics/plot-carbon-cycle-anomaly-timeseries-1}
-\caption{Carbon cycle quantities in the JULES ensemble.}
-\label{fig:plot-carbon-cycle-anomaly-timeseries-1}
-\end{figure*}
-
-
-
-\subsection{Failure analysis}
+\subsection{Failure analysis}\label{ssec:failure-analysis}
 
 We analyse the ensemble to remove "failed" runs, and remove ensemble members in parts of parameter space that cannot hope to produce a useful simulation of the carbon cycle. First, we map ensemble members where the model crashed or failed to run, perhaps due to numerical error (termed "failed"). Second, we identify parts of parameter space where important parts of the carbon cycle are completely missing - that is, basic carbon cycle quantities are at or close to zero at the end of the run (termed "zero carbon cycle"). For this second class, we choose a threshold of mean modern global NPP close to zero (* scale data to find out)
 
@@ -213,14 +223,143 @@ in fig. \ref{fig:run-failure-pairs}, we see a pairs plot of "failed" runs (upper
 
 For example, we can see that both $f0\_io$ and $b\_wl\_io$ have important thresholds, beyond which there is almost no chance of a functioning carbon cycle. As there appears little to no interaction between these two, this presents as a nearly-blank plot at the intersection of the parameters on the plot, with inputs identifying zero-carbon runs around the edges of the sub plot.
 
-
-Combine the plot for these two? - pairs of both failures and $f0\_io b\_wl\_io$ threshold?
-
 \begin{figure*}[t]
 \includegraphics[width=12cm]{./graphics/run-failure-pairs.pdf}
 \caption{Pairs plot of the locations in (normalised) input space of the ensemble members that did not run/failed.}
 \label{fig:run-failure-pairs}
 \end{figure*}
+
+
+\subsection{Initial direct constraints}
+
+Our "iterated refocussing" experiment use a combination of formal and informal methods to sequentially constrain input parameter space and model behaviour, dependent on both expertise and expectation of the modeller, and more formal comparison with observational data.
+
+We therefore use a number of "waves" of ensemble runs, and  "levels of constraint", where those waves are compared with data, or modified by the modeller. 
+
+Our aim for the initial ensemble is primarily to train a good surrogate model (here a Gaussian process emulator), and therefore we require relatively smooth output across the inputs space, without discontinuities or highly nonlinear and poor behaviour that might bias an emulator.
+
+Our initial (wave00) ensemble of 499 members is constrained to "Level0" by removing ensemble members which do not run (see section \ref{ssec:failure-analysis}, to "Level 1" by removing any ensemble member outside of the threshold in $F0$ identified in that section, and "Level 1a" by removing anything outside the threshold in $B\_WL\_IO$. This leaves us with a "level 1a" ensemble of 362 members that at least run and have a minimally functioning carbon cycle.
+
+\subsection{Level 2 Constraints}
+
+We can constrain both the historical behaviour of the model and the model parameter input space by comparison of the model behaviour with observations and other model simulations.
+The simplest way to constrain the historical behaviour of the carbon cycle is by removing from the ensemble model runs that lead to implausible values of basic carbon cycle quantities in the modern era. These constraints are outlined in table \ref{table:level_2_constraints}.
+
+Our strategy is to exclude model variants that have soil or vegetation carbon stocks, net primary production (NPP) or net biome production (NBP) in the modern era that are inconsistent with modern observations or understanding. This approach borrows from the more formal process of history matching, in that ensemble members deemed implausible are excluded. In history matching, a formal statistical process is used, whereas in this first section, we are concerned with simply removing a number of very poorly behaving model variants, such that the modeller is certain that they don't offer useful information about the carbon cycle.
+
+A challenge when comparing models of the land surface with the carbon cycle is the lack of model-independent observations back through time, and the relatively large uncertainty in comparing the model dynamics with the true behaviour of the system. Because of this, it is important to be tolerant to a wide range of behaviours in the model itself. 
+
+In a "tolerance to error" approach, the modeller (Wiltshire) gave estimated ranges for Vegetation and Soil carbon stocks, NBP and NPP at the end of the model run (2013), with instruction to be conservative - that is with enough range to be sure to encompass any reasonable uncertainties (see table \ref{table:level_2_constraints}). These ranges were considerably wider than the ranges given by the AR5, for example.
+
+Because of this wide tolerance of modern behaviours, we perhaps should not be too optimistic that large regions of input space, or potential histories of the carbon cycle, should be excluded (alternatively that the space of possible histories and input space should be overly constrained).
+
+However, even given the wide ranges of tolerable behaviour, a large number of our ensemble members are excluded. Of the 362 ensemble members that run, and have non-zero carbon cycle properties (constraint level 1a), only 37 (10.2\%) fall within the wide bounds set by the modeller.
+
+Given that only a small number of ensemble members fall within the constraints, we do however see quite diverse behaviour in the ensemble. For example, we see the direct constraint of historical soil and vegetation carbon pools in figure \ref{fig:vegC-soilC-constrained}. The constraint has ruled out ensemble members with lower (and occiasionally higher) pools of both soil and vegetation carbon. However, it has ruled, and therefore offers an "emergent" constraint on ensemble members with a declining soil carbon pool. It has not produced a similar constraint on ensemble members with a declining vegetation carbon pool.
+
+%% TWO-COLUMN TABLE
+%%% The different columns must be seperated with a & command and should
+%%% end with \\ to identify the column brake.
+
+%t
+\begin{table*}[t]
+\caption{Levels of constraint}
+\label{table:levels_of_constraint}
+\begin{tabular}{l r}
+\tophline
+Level & Constraint  \\ 
+\middlehline
+Level 0  & Model Runs \\
+Level 1 & $F0 < 0.9$ \\
+Level 1a & $B\_WL\_IO > 0.15 $ \\ 
+Level 2  & NPP, NBP, cVeg and cSoil \\
+
+\bottomhline
+\end{tabular}
+\belowtable{} % Table Footnotes
+
+\end{table*}
+
+
+
+%t
+\begin{table*}[t]
+\caption{Level 2 output constraints}
+\label{table:level_2_constraints}
+\begin{tabular}{l r r}
+\tophline
+Constraint & Minimum & Maximum \\ 
+\middlehline
+NBP & 0 GtC/yr &  10 GtC/yr\\
+NPP & 35 GtC/yr & 80 GtC/yr \\
+Soil Carbon stock & 750 GtC &  3000 GtC\\ 
+Vegetation Carbon stock & 300 GtC & 800 GtC \\
+
+\bottomhline
+\end{tabular}
+\belowtable{} % Table Footnotes
+
+\end{table*}
+
+
+%%% TWO-COLUMN FIGURES
+%
+%%f
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/carbon-cycle-timeseries-waves-constrained.pdf}
+\caption{Primary carbon cycle quantities in the JULES ensemble.}
+\label{fig:carbon-cycle-timeseries-waves-constrained}
+\end{figure*}
+
+%%% TWO-COLUMN FIGURES
+%
+%%f
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/carbon-cycle-timeseries-anomaly-waves-constrained.pdf}
+\caption{Primary carbon cycle anomaly quantities in the JULES ensemble.}
+\label{fig:carbon-cycle-timeseries-anomaly-waves-constrained}
+\end{figure*}
+
+
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/level_2_constraints_hists.pdf}
+\caption{level 1 constraint histograms}
+\label{fig:level_2_constraints_hists}
+\end{figure*}
+
+%%% TWO-COLUMN FIGURES
+%
+%%f
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/vegC-soilC-constrained.pdf}
+\caption{Constraint of historical soil carbon and vegetation carbon pools}
+\label{fig:vegC-soilC-constrained}
+\end{figure*}
+
+
+\subsection{Second wave (wave01)}
+
+We formally history match to the level 2 constraints, and generate a second wave (wave01) design from the NROY input space.
+
+\subsubsection{History matching}
+
+History matching details and equations here
+
+\subsubsection{Gaussian Process emulators} 
+
+Gaussian Process emulator equations and summary details here.
+
+\subsubsection{Carbon cycle behaviour summaries}
+
+Edit this to include second wave.
+
+For our primary analysis, we study summaries of the global carbon cycle behaviour, consisting of the global sum or mean of a number of carbon cycle indicators. Time series of these indicators for each ensemble member over the entire run can be seen in fig. \ref{fig:carbon-cycle-timeseries-waves-constrained}. It is clear that perturbing parameters over a wide ensemble design produces a wide range of model behaviour, from a carbon cycle that is apparently missing, to one that embodies and cycles a large amount of carbon. while the design draws uniformly from each parameter, it is clear that model outputs cluster together in preferred behaviours.
+
+In many indicators, perturbing parameters affects the overall level of the carbon cycle property, with it's behaviour through time being only a secondary source of variance at, say, the end of the model run. That is, the carbon cycle level at the end of the run is more closely related to its level at the beginning of the run than it is to its change over time. Having said that, there is variability in the behaviour of the carbon cycle over time, as can be seen in fig. \ref{fig:plot-carbon-cycle-anomaly-timeseries-1}. Here, we examine a small selection of the most important indicators, and examine their change in behaviour over time, or anomaly from the starting value. We see for example, that changing the parameters can make soil and vegetation carbon increase or decrease over the simulated century and a half of the model run. 
+
+
+
+
 
 
 \begin{figure*}[t]
@@ -302,11 +441,11 @@ We add detail to our one-at-at-time sensitivity of important outputs - those tha
 
 \subsection{Monte Carlo Filtering}
 
-Monte Carlo filtering (MCF) is a type of sensitivity analysis that integrates well with our aim of constraining model behaviour given a large ensemble using History matching. The idea of MCF is to identify inputs that have an influence on whether the behaviour of the model falls within or outside acceptable bounds of behaviour. This is done by splitting samples of model behaviour into those that do or don't meet some constraint, and then examining differences between the cumulative distributions of the corresponding input variables.
+Monte Carlo filtering (MCF) is a type of sensitivity analysis that integrates well with our aim of constraining model behaviour given a large ensemble using ensemble member rejection, or History matching. The idea of MCF is to identify inputs that have an influence on whether the behaviour of the model falls within or outside acceptable bounds. This is done by splitting samples of model behaviour into those that do or don't meet some constraint, and then summarising the difference between the cumulative distributions of the corresponding input variables.
 
 A description of MCF and its uses can be found in \ref{pianosa}, and using MCF to estimate parameter sensitivity in a land surface model can be found in \ref{mcneall20}.
 
-As in that paper, we draw a large sample of 10000 parameter combinations, uniformly from the input parameter distributions constrained to level1a. We use the emulator to estimate the true model output for each of the four "constraining variable, NPP, NBP, cVeg and cSoil at these parameter values. We perform a two-sample KS test on the cumulative distributions of those input samples where the mean of the emulator predicts that the model would be within or outside of the modellers level 2 constraints. We use this KS statistic as an indicator of the sensitivity of the model output to each input. We summarise the sensitivity in figure \ref{fig:MCF_sensmat_Yconst_level1a}
+We use a Gaussian process emulator to allow a much larger set of samples from the input space, in order to make the MCF process more efficient, at the cost of inaccuracy if the emulator is poor. We draw a large sample of 10000 parameter combinations, uniformly from the input parameter distributions constrained to level1a. We use the emulator to estimate the true model output for each of the four "constraining variables", NPP, NBP, cVeg and cSoil at these parameter values. We perform a two-sample KS test on the cumulative distributions of those input samples where the mean of the emulator predicts that the model would be within or outside of the modellers level 2 constraints. We use this KS statistic as an indicator of the sensitivity of the model output to each input. We summarise the sensitivity in figure \ref{fig:MCF_sensmat_Yconst_level1a}
 
 \begin{figure*}[t]
 \includegraphics[width=12cm]{./graphics/MCF_sensmat_Yconst_level1a}
@@ -316,7 +455,11 @@ As in that paper, we draw a large sample of 10000 parameter combinations, unifor
 
 \subsection{Choosing or excluding inputs}
 
-If we were asked to decide which parameters to exclude a set of parameters for a new ensemble, which would we choose? One way to choose might be to exclude those parameters which have little effect on \emph{any} model output of interest. For this ensemble we find these by ranking the inputs by their summarising their OAAT effect across all outputs. Choosing the inputs that are consistently ranked lowest would be a conservative method of excluding inputs.
+If we were asked to decide which parameters to exclude a set of parameters for a new ensemble, which would we choose? One way to choose might be to exclude those parameters which have little effect on \emph{any} model output of interest, under any measure of sensitivity.
+
+For this ensemble we find these "inactive inputs" by ranking the inputs by each of the sensitivity measures: MCF for the "modern value" of the constraint inputs, and One-at-a-time and FAST for both modern value and anomaly value for the entire set of inputs. A conservative strategy would be to exclude inputs that are consistently ranked lowest, that is those with the highest minumum ranking.
+
+*Potential problems with this approach* - They all share an emulator, and any errors will be propagated through all these results.  
 
 % latex table generated in R 3.6.3 by xtable 1.8-4 package
 % Wed Dec  1 12:36:34 2021
@@ -368,68 +511,6 @@ alpha\_io & 1 & 1 & 2 & 1 & 1 & 1 \\
 
 
 
-\section{Constraining the historical carbon cycle}
-
-We can constrain both the historical behaviour of the model and the model parameter input space by comparison of the model behaviour with observations and other model simulations.
-
-We use a number of strategies for model constraint.
-
-We find the most effective outputs for constraining model inputs and behaviour. ** One at a time constraint analysis, needs doing **
-
-
-\subsection{Direct constraint of ensemble members}
-
-The simplest way to constrain the historical behaviour of the carbon cycle is by removing from the ensemble model runs that lead to implausible values of basic carbon cycle quantities in the modern era. These constraints are outlined in table \ref{table:level_2_constraints}.
-
-Our strategy is to exclude model variants that have soil or vegetation carbon stocks, net primary production (NPP) or net biome production (NBP) in the modern era that are inconsistent with modern observations or understanding. This approach borrows from the more formal process of history matching, in that ensemble members deemed implausible are excluded. In history matching, a formal statistical process is used, whereas in this first section, we are concerned with simply removing a number of very poorly behaving model variants, such that the modeller is certain that they don't offer useful information about the carbon cycle.
-
-A challenge when comparing models of the land surface with the carbon cycle is the lack of model-independent observations back through time, and the relatively large uncertainty in comparing the model dynamics with the true behaviour of the system. Because of this, it is important to be tolerant to a wide range of behaviours in the model itself. 
-
-The modeller (Wiltshire) gave ranges for Vegetation and Soil carbon stocks, NBP and NPP at the end of the model run (2013), with instruction to be conservative - that is with enough range to be sure to encompass any reasonable uncertainties (see table \ref{table:level_2_constraints}). These ranges were considerably wider than the ranges given by the AR5, for example.
-
-Because of this wide tolerance of modern behaviours, we perhaps should not be too optimistic that large regions of input space, or potential histories of the carbon cycle, should be excluded (alternatively that the space of possible histories and input space should be overly constrained).
-
-However, even given the wide ranges of tolerable behaviour, a large number of our ensemble members are excluded. Of the 362 ensemble members that run, and have non-zero carbon cycle properties (constraint level 1a), only 37 (10.2\%) fall within the wide bounds set by the modeller.
-
-Given that only a small number of ensemble members fall within the constraints, we do however see quite diverse behaviour in the ensemble. For example, we see the direct constraint of historical soil and vegetation carbon pools in figure \ref{fig:vegC-soilC-constrained}. The constraint has ruled out ensemble members with lower (and occiasionally higher) pools of both soil and vegetation carbon. However, it has ruled, and therefore offers an "emergent" constraint on ensemble members with a declining soil carbon pool. It has not produced a similar constraint on ensemble members with a declining vegetation carbon pool.
-
-%% TWO-COLUMN TABLE
-%%% The different columns must be seperated with a & command and should
-%%% end with \\ to identify the column brake.
-
-%t
-\begin{table*}[t]
-\caption{Level 2 output constraints}
-\label{table:level_2_constraints}
-\begin{tabular}{l r r}
-\tophline
-Constraint & Minimum & Maximum \\ 
-\middlehline
-NBP & 0 GtC/yr &  10 GtC/yr\\
-NPP & 35 GtC/yr & 80 GtC/yr \\
-Soil Carbon stock & 750 GtC &  3000 GtC\\ 
-Vegetation Carbon stock & 300 GtC & 800 GtC \\
-
-\bottomhline
-\end{tabular}
-\belowtable{} % Table Footnotes
-
-\end{table*}
-
-\begin{figure*}[t]
-\includegraphics[width=12cm]{./graphics/level_2_constraints_hists.pdf}
-\caption{level 1 constraint histograms}
-\label{fig:level_2_constraints_hists}
-\end{figure*}
-
-%%% TWO-COLUMN FIGURES
-%
-%%f
-\begin{figure*}[t]
-\includegraphics[width=12cm]{./graphics/vegC-soilC-constrained.pdf}
-\caption{Constraint of historical soil carbon and vegetation carbon pools}
-\label{fig:vegC-soilC-constrained}
-\end{figure*}
 
 %%% TWO-COLUMN FIGURES
 
