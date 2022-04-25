@@ -173,9 +173,67 @@ An extension to consider: what happens when we project the constrained space for
     \item Uncertainty Quantification for model development
 \end{enumerate}
 
+Land surface models are an important tool in the study of climate change and its impacts, but their use can be hampered by uncertainties in the differences between the models and the real world. Uncertainty quantification (UQ) methods have been developed in order to quantify those differences, how to minimise them, and how to asses their impact on the use of models in policy advice.
+
+We'd like to constrain the uncertain input parameters using data.
+We'd like to know which parameters are important for which outputs.
+We'd like information on model discrepancy. Is there a "best" configuration.
+We'd like and ensemble which can be used for impacts/future projections. Covering reasonable uncertainty.
+
+
 Top-down approach, compared to bottom-up approach of e.g Baker et al.
 
-We run Jules-ES-1.0 in a 500-member ensemble, driven by historical reanalysis. Each ensemble member has a different configuration of 32 input parameters, identified as potentially important in influencing land surface dynamics important by the  model developers. The parameters were perturbed randomly, in a Latin hypercube configuration, and within ranges defined by the model developers as being likely to at least produce output from the model.
+We run Jules-ES-1.0 in a 500-member ensemble, driven by historical reanalysis. Each ensemble member has a different configuration of 32 input parameters, identified as potentially important in influencing land surface dynamics important by the model developers (see table /ref{table:parameters}.
+
+* Table of input parameter descriptions*
+%t
+\begin{table*}[t]
+\caption{Uncertain input parameters in JULES-ES-1p0}
+\label{table:Parameters}
+\begin{tabular}{l r}
+\tophline
+Parameter & Description  \\ 
+\middlehline
+
+alpha\_io & Quantum efficiency (mol CO2 per mol PAR photons). \\ 
+  lai\_max\_io & Maximum LAI. \\ 
+  b\_wl\_io & Allometric exponent relating the target woody biomass to the leaf area index.\\ 
+  fd\_io & Scale factor for dark respiration.\\ 
+  g\_area\_io &  Disturbance rate (/360days).\\ 
+  n\_inorg\_turnover &Parameter controlling the lifetime of the inorganic N pool. \\ 
+  r\_grow\_io & Growth respiration fraction.\\ 
+  lma\_io & Leaf mass per unit area (kgLeaf m-2). \\ 
+  a\_wl\_io & Allometric coefficient relating the target woody biomass to the leaf area index (kg carbon m-2). \\ 
+  bio\_hum\_cn &  Parameter controlling ratio of C to N for BIO and HUM pools.\\ 
+  nmass\_io &  Top leaf nitrogen content per unit mass (kgN kgLeaf-1).\\ 
+  kaps\_roth &  Specific soil respiration rate for the RothC submodel for each soil carbon pool.\\ 
+  hw\_sw\_io & Ratio of N stem to N heartwood (kgN/kgN) from the TRY database. \\ 
+  tleaf\_of\_io & Temperature below which leaves are dropped (K).\\ 
+  dqcrit\_io & Critical humidity deficit (kg H2O per kg air). \\ 
+  lai\_min\_io & Minimum LAI. \\ 
+  tupp\_io & Upper temperature for photosynthesis (deg C). \\ 
+  retran\_l\_io & Fraction of retranslocated leaf N.\\ 
+  rootd\_ft\_io & Parameter determining the root depth (m). \\ 
+  l\_vg\_soil & Switch for van Genuchten soil hydraulic model. \\ 
+  dz0v\_dh\_io & Rate of change of vegetation roughness length for momentum with height. \\ 
+  f0\_io & CI / CA for DQ = 0. \\ 
+  sigl\_io & Specific density of leaf carbon (kg C/m2 leaf).\\ 
+  g\_root\_io & Turnover rate for root biomass (/360days). \\ 
+  gs\_nvg\_io & Surface conductance (m s-1). \\ 
+  retran\_r\_io & Fraction of retranslocated root N.\\ 
+  g\_wood\_io &  Turnover rate for woody biomass (/360days).\\ 
+  nr\_io &  Root nitrogen concentration (kgN/kgC).\\ 
+  knl\_io & Parameter for decay of nitrogen through the canopy, as a function of LAI.\\ 
+  sorp & Parameter controlling the leaching of inorganic N through the soil profile. \\ 
+  dcatch\_dlai\_io &Rate of change of canopy capacity with LAI (kg m-2).  \\ 
+  tlow\_io & Lower temperature for photosynthesis (deg C).\\  
+\bottomhline
+\end{tabular}
+\belowtable{} % Table Footnotes
+
+\end{table*}
+
+The parameters were perturbed randomly, in a Latin hypercube configuration, and within ranges defined by the model developers as being likely to at least produce output from the model.
 
 We identify model variants, and their associated input configurations, where the model produces output that is consistent - within uncertain limits - with modern observations of the carbon cycle. We build statistical models of the relationship between the input configuration and the modern model output - termed emulators - which allow us to visualise and explore these relationships as if we had a much larger ensemble.
 
@@ -187,8 +245,6 @@ Having constrained both input parameter space and model outputs using modern obs
 
 Our analysis informs the construction a new ensemble design, with ensemble members picked to lie within the input space not ruled out by a comparison of the model behaviour with modern observations. 
 
-\section{Constraining the historical carbon cycle}
-
 Our aim was to run an iterated experiment to create an ensemble of JULES runs that would allow  a number of different types of analysis. Our objectives were 1) to find an ensemble of JULES runs that would represent (and span) uncertainty in both model input parameters and historical land surface behaviour, thus creating a basis ensemble for a UQ analysis of past behaviour and future projections. 2) Explore if some uncertain input parameters could be constrained by comparison of the model outputs with observational data and 3) To create an ensemble that could be used for sensitivity analyses, identifying the most important inputs. 
 
 All of these objectives are well served by creating an ensemble that allows surrogate models, or emulators, to be trained and used in place of the full simulator.
@@ -196,6 +252,8 @@ All of these objectives are well served by creating an ensemble that allows surr
 Many climate model experiments have only a limited amount of computational budget, and modellers must decide how to spend that budget. While JULES-ES-1p0 is relatively cheap, and in practice we were not constrained (within reason) by computational budget, we decided to mimic a full climate model experiment. Such an experiment might have access to a few tens to a few thousand model runs. We decided to run the experiment with approximately 1000 runs, somewhere near the middle of this range.
 
 Our experiment was inspired by the history matching procedure, otherwise known as "iterated refocussing", in which an initial ensemble is run, ensemble members (and the associated input space) deemed too far from reality are ruled out, and a further wave of ensemble members are run in the input space that has not been ruled out yet. At each stage, a surrogate model, or emulator is trained on the model outputs, predicting model output at inputs not yet run. This emulator is used to predict which inputs will not be ruled out in the next wave, and for new design points to be selected from these candidates. The emulator should become more accurate in the valid input space at each wave. As this was an exploratory design process, we did not attempt to optimise this process by selecting an ideal number of runs for each stage, but instead chose reasonable numbers, before deciding to go further if necessary.
+
+\section{Constraining the historical carbon cycle}
 
 Our experiment has a "top-down" structure, in that we attempt to constrain input parameter space (and therefore model behaviour) by comparison to observational data, starting from a global overview. We use very little prior information to choose initial input parameter ranges, we run the model globally, and we compare globally averaged model output to globally averaged observations, starting with a few important properties, and working towards more detail. An alternative experiment structure might be classed as "bottom up" - starting with standard parameters and working away from them, focusing on individual processes within the model, and comparing with much more focused model output and observations, both in time and in space. Ultimately, both of these types of experiment will be important in integrating new processes into larger models in a model development process.
 
@@ -229,6 +287,11 @@ For example, we can see that both $f0\_io$ and $b\_wl\_io$ have important thresh
 \label{fig:run-failure-pairs}
 \end{figure*}
 
+\begin{figure*}[t]
+\includegraphics[width=12cm]{./graphics/run-failure-hists.pdf}
+\caption{Histograms of the locations in (normalised) input space of the ensemble members that did not run/failed.}
+\end{figure*}
+
 
 \subsection{Initial direct constraints}
 
@@ -238,7 +301,24 @@ We therefore use a number of "waves" of ensemble runs, and  "levels of constrain
 
 Our aim for the initial ensemble is primarily to train a good surrogate model (here a Gaussian process emulator), and therefore we require relatively smooth output across the inputs space, without discontinuities or highly nonlinear and poor behaviour that might bias an emulator.
 
-Our initial (wave00) ensemble of 499 members is constrained to "Level0" by removing ensemble members which do not run (see section \ref{ssec:failure-analysis}, to "Level 1" by removing any ensemble member outside of the threshold in $F0$ identified in that section, and "Level 1a" by removing anything outside the threshold in $B\_WL\_IO$. This leaves us with a "level 1a" ensemble of 362 members that at least run and have a minimally functioning carbon cycle.
+Our initial (wave00) ensemble of 499 members is sequentially constrained; to "Level0" by removing 24 ensemble members which do not run (see section \ref{ssec:failure-analysis}, to "Level 1" by removing the 50 remaining ensemble member outside of the threshold in $F0$ identified in that section, and "Level 1a" by removing the 64 remaining members outside the threshold in $B\_WL\_IO$. This leaves us with a "level 1a" ensemble of 361 members that at least run and have a minimally functioning carbon cycle.
+
+\subsubsection{minimally constrained ensemble behaviours}
+
+The globally averaged carbon cycle and land surface behaviour of the minimally ensemble (level 1a) can be seen in fig. \ref{fig:carbon-cycle-timeseries-waves-constrained}, and anomalies compared to the average of the first 20 years of the runs can be seen in fig. \ref{fig:carbon-cycle-timeseries-anomaly-waves-constrained}, in the blue lines.
+
+The ensemble displays a very wide range of both absolute levels and changes in a selection of carbon cycle and land surface properties, compared to the model run at standard settings (black). For example, NPP runs from approximately zero to over 150 GtC/year. Soil carbon stocks are between zero and more than 4000 GtC, and Vegetation stocks range from 0 to over 2000 GtC.
+
+A large number of ensemble members have a hugely diminished carbon cycle and carbon cycle stocks compared to the standard member. This can be seen from examining the histograms of the modern values of a number of key carbon cycle properties in fig. \ref{fig:wave00-level1a-modern-value-hists}, compared to the values of the standard member (vertical lines).
+
+In particular, most ensemble members have a very low tree fraction, and a higher bare soil fraction than the standard member - It seems particularly easy to kill global forests when perturbing parameters. Vegetation and soil carbon levels are very low. 
+
+[Note: this brings into question whether a top-down UQ method is advisable for JULES. Or ware we just perturbing too much? ]
+
+[Note: A number of TS show large deviations from reality - discarded.]
+
+In many indicators, perturbing parameters affects the overall level of the carbon cycle property, with it's behaviour through time being only a secondary source of variance at, say, the end of the model run. That is, the carbon cycle level at the end of the run is more closely related to its level at the beginning of the run than it is to its change over time. Having said that, there is variability in the behaviour of the carbon cycle over time, as can be seen in fig. \ref{fig:carbon-cycle-timeseries-anomaly-waves-constrained}. Here, we examine a selection of the most important indicators, and examine their change in behaviour over time, or anomaly from the starting value. We see for example, that changing the parameters can make soil and vegetation carbon increase or decrease over the simulated century and a half of the model run. 
+
 
 \subsection{Level 2 Constraints}
 
@@ -253,9 +333,7 @@ In a "tolerance to error" approach, the modeller (Wiltshire) gave estimated rang
 
 Because of this wide tolerance of modern behaviours, we perhaps should not be too optimistic that large regions of input space, or potential histories of the carbon cycle, should be excluded (alternatively that the space of possible histories and input space should be overly constrained).
 
-However, even given the wide ranges of tolerable behaviour, a large number of our ensemble members are excluded. Of the 362 ensemble members that run, and have non-zero carbon cycle properties (constraint level 1a), only 37 (10.2\%) fall within the wide bounds set by the modeller.
-
-Given that only a small number of ensemble members fall within the constraints, we do however see quite diverse behaviour in the ensemble. For example, we see the direct constraint of historical soil and vegetation carbon pools in figure \ref{fig:vegC-soilC-constrained}. The constraint has ruled out ensemble members with lower (and occiasionally higher) pools of both soil and vegetation carbon. However, it has ruled, and therefore offers an "emergent" constraint on ensemble members with a declining soil carbon pool. It has not produced a similar constraint on ensemble members with a declining vegetation carbon pool.
+However, even given the wide ranges of tolerable behaviour, a large number of our ensemble members are excluded. Of the 361 ensemble members that run, and have non-zero carbon cycle properties (constraint level 1a), only 37 (10.2\%) fall within the wide bounds set by the modeller Wiltshire.
 
 %% TWO-COLUMN TABLE
 %%% The different columns must be seperated with a & command and should
@@ -279,8 +357,6 @@ Level 2  & NPP, NBP, cVeg and cSoil \\
 \belowtable{} % Table Footnotes
 
 \end{table*}
-
-
 
 %t
 \begin{table*}[t]
@@ -327,53 +403,42 @@ Vegetation Carbon stock & 300 GtC & 800 GtC \\
 \label{fig:level_2_constraints_hists}
 \end{figure*}
 
+
 %%% TWO-COLUMN FIGURES
 %
 %%f
 \begin{figure*}[t]
-\includegraphics[width=12cm]{./graphics/vegC-soilC-constrained.pdf}
-\caption{Constraint of historical soil carbon and vegetation carbon pools}
-\label{fig:vegC-soilC-constrained}
+\includegraphics[width=12cm]{./graphics/wave00-level1a-modern-value-hists.pdf}
+\caption{Histograms of the modern value of carbon cycle properties in the wave00 ensemble, constrained to level1a (non-running members and zero carbon excluded). [Note fix units on the vectors]}
+\label{fig:wave00-level1a-modern-value-hists}
 \end{figure*}
 
 
-\subsection{Second wave (wave01)}
+\subsection{Design for Second wave (Wave01)}
 
-We formally history match to the level 2 constraints, and generate a second wave (wave01) design from the NROY input space.
+Only a very small proportion of ensemble members (37) conform to the basic "level 2" constraints expected of a useful model by our modeller. We would like to have a larger number of ensemble members in this range, so that any emulator we build has enough detail to be useful, and we can accurately map out viable input space.
+
+We wish to run more ensemble members within a valid input space, and so we formally history match to the level 2 space, in order to generate an input design for a new wave of ensemble members.
 
 \subsubsection{History matching}
 
-History matching details and equations here
+History matching details and equations here.
+
+We history match so that the 95\% range matches the limits given to us by Wiltshire - i.e. the "level 2" constraints. 
+
+We use a Gaussian process emulator to do the history matching.
 
 \subsubsection{Gaussian Process emulators} 
 
 Gaussian Process emulator equations and summary details here.
 
-\subsubsection{Carbon cycle behaviour summaries}
+\subsubsection{Behaviour of second wave}
 
-Edit this to include second wave.
+Constrained, but many ensemble members lie outside of level 2 constraints, due to emulator error, and tolerance to error approach.
 
-For our primary analysis, we study summaries of the global carbon cycle behaviour, consisting of the global sum or mean of a number of carbon cycle indicators. Time series of these indicators for each ensemble member over the entire run can be seen in fig. \ref{fig:carbon-cycle-timeseries-waves-constrained}. It is clear that perturbing parameters over a wide ensemble design produces a wide range of model behaviour, from a carbon cycle that is apparently missing, to one that embodies and cycles a large amount of carbon. while the design draws uniformly from each parameter, it is clear that model outputs cluster together in preferred behaviours.
+\subsubsection{Behaviour of second wave level2}
 
-In many indicators, perturbing parameters affects the overall level of the carbon cycle property, with it's behaviour through time being only a secondary source of variance at, say, the end of the model run. That is, the carbon cycle level at the end of the run is more closely related to its level at the beginning of the run than it is to its change over time. Having said that, there is variability in the behaviour of the carbon cycle over time, as can be seen in fig. \ref{fig:plot-carbon-cycle-anomaly-timeseries-1}. Here, we examine a small selection of the most important indicators, and examine their change in behaviour over time, or anomaly from the starting value. We see for example, that changing the parameters can make soil and vegetation carbon increase or decrease over the simulated century and a half of the model run. 
-
-
-
-
-
-
-\begin{figure*}[t]
-\includegraphics[width=12cm]{./graphics/run-failure-hists.pdf}
-\caption{Histograms of the locations in (normalised) input space of the ensemble members that did not run/failed.}
-\end{figure*}
-
-
-
-
-
-
-
-
+Ensemble is constrained in many ways, but not in others - quantify and document.
 
 \section{What we need to take the next steps in the analysis}
 
@@ -387,7 +452,6 @@ In many indicators, perturbing parameters affects the overall level of the carbo
 \begin{enumerate}
     \item 
 \end{enumerate}
-
 
 
 \section{Results}
