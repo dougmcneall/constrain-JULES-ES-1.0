@@ -118,19 +118,19 @@
 
 \begin{abstract}
 
-Land surface models are an important tool in the study of climate change and its impacts, but their use can be hampered by uncertainties in input parameter settings, and by errors in the models. In this study we apply Uncertainty Quantification (UQ) techniques to constrain the input parameters of JULES-ES-1.0, the land surface component of the UK Earth system model UKESM1.0. We use an ensemble of historical simulations of the land surface model, driven by reanalysis, to rule out ensemble members and corresponding input parameters that do not match modern observations of the land surface. As the land surface model is computationally expensive, we use a statistical proxy, termed an emulator, trained on the ensemble of model runs, to rule out untested parts of parameter space. We take an iterated approach to constraining JULES, running an initial ensemble and training the emulator, before using it to choose a second wave of ensemble members consistent with historical land surface observations and expectations. The result is an ensemble of simulations and associated joint distribution of input parameters, statistically consistent with land surface behaviour. We use sensitivity analysis to identify the most (and least) important input parameters for controlling the global output of JULES-ES-1.0, and provide information on how parameters might be varied to improve the performance of the model, and eliminate model biases.
+Land surface models are an important tool in the study of climate change and its impacts, but their use can be hampered by uncertainties in input parameter settings and by errors in the models. We apply Uncertainty Quantification (UQ) techniques to constrain the input parameters of JULES-ES-1.0, the land surface component of the UK Earth system model UKESM1.0. We use an ensemble of historical simulations of the land surface model to rule out ensemble members and corresponding input parameter settings that do not match modern observations of the land surface. As JULES-ES-1.0 is computationally expensive, we use a cheap statistical proxy termed an emulator, trained on the ensemble of model runs, to rule out untested parts of parameter space. We take an iterated approach to constraining JULES-ES-1.0, running an initial ensemble and training the emulator, before choosing a second wave of ensemble members consistent with historical land surface observations. We rule out 88\% of the initial input parameter space as being statistically inconsistent with observed land surface behaviour. We use sensitivity analysis to identify the most (and least) important input parameters for controlling the global output of JULES-ES-1.0, and provide information on how parameters might be varied to improve the performance of the model and eliminate model biases.
 
 \end{abstract}
 
-\copyrightstatement{Crown copyright, Met Office} %% This section is optional and can be used for copyright transfers.
+\copyrightstatement{ $\copyright$ Crown copyright, Met Office} %% This section is optional and can be used for copyright transfers.
 
 \introduction\label{sec:introduction}  %% \introduction[modified heading if necessary]
 
-Land surface models are an important tool in the study of climate change and its impacts, but their use can be hampered by differences between the models and the real world. These differences can be caused by fundamental errors or a lack of knowledge of real world processes, or by the simplifications and compromises required to build and run the computationally expensive computer models that we use to simulate those processes. Uncertainty quantification (UQ) methods have been developed in order to identify and quantify the differences between the models and the real world, how to minimise those differences, and how to asses their impact on the use of models in policy advice.
+Land surface models are widely used for the study and projection of climate change and its impacts, but differences between the models and the systems they represent can linit their effectiveness \citep{fisher2020perspectives}. These differences can be caused by fundamental errors or a lack of knowledge of real world processes, or by the simplifications and compromises required to build and run the computationally expensive computer models that we use to simulate those processes. Uncertainty quantification (UQ) methods have been developed in order to identify and quantify the differences between the models and the real world, how to minimise those differences, and how to asses their impact on the use of models in policy advice.
 
-Complex land surface models contain a large number of tuneable input parameters - numbers which represent simplifications of processes which are either unnecessary or too computationally expensive to include in a simulation. The value of a particular input parameter can materially affect the output of a model, but it is often unclear exactly how until the corresponding simulations are run. Input parameters may represent some real-world quantity, and so a modeller may have a belief about the "correct" value of that input parameter, that they are able to represent with a probability distribution. As processes interact within a model, input parameters can rarely be tuned in isolation to each other. For many climate applications, a reasonable goal is to choose a set of input parameters so that the model behaves consistently with our understanding of the behaviour of the true system, and that is consistent with our knowledge of the value that those input parameters have in the real world. The input parameters of such a model are said to be "constrained", and any simulations of future behaviour will be constrained by our choice of input settings to be consistent with our best understanding of the system.
+Complex land surface models contain a large number of tuneable input parameters - numbers which represent simplifications of processes which are either unnecessary or too computationally expensive to include in a simulation. The value of a particular input parameter can materially affect the output of a model, but it is often unclear exactly how until the corresponding simulations are run. Input parameters may represent some real-world quantity, and so a modeller may have a belief about the "correct" value of that input parameter, that they are able to represent with a probability distribution. As processes interact within a model, input parameters can rarely be tuned in isolation to each other. For many climate applications, a goal is to choose the ranges of input parameters so that the model behaves consistently with our understanding of the behaviour of the true system, and that is consistent with our knowledge of the value that those input parameters have in the real world. The input parameters of such a model are said to be "constrained", and any simulations of future behaviour will be constrained by our choice of input settings to be consistent with our best understanding of the system.
 
-As we have uncertainty about the structure and the behaviour of the true system, through a lack of knowledge or through uncertain observations, the value of the "best" configuration of input parameters is uncertain. In practice, modellers often choose ranges of input parameters, and run collections of model evaluations termed an "ensemble", the output of which represents uncertainty about the behaviour of the true system.
+As we have uncertainty about the structure and the behaviour of the true system, through a lack of knowledge or through uncertain observations, the value of the "best" configuration of input parameters and their associated probability distributions is uncertain. In practice, modellers often use constrained ranges of input parameter to run collections of model evaluations termed "ensembles", crudely representing uncertainty about the behaviour of the true system.
 
 Perturbed parameter ensembles (PPEs) are useful for the evaluation of complex and computationally expensive climate models, including land surface models. A PPE is a collection of simulator runs where input parameters are systematically varied in line with a set of principles consistent with our knowledge and experiment objectives. PPEs allow a quantification of the relationship between the model input parameters and its output. They can therefore be used for the quantification and propagation of uncertainty in parameter constraint, in sensitivity of the model outputs to perturbations, and can give hints as to the size and location of model structural errors.
 
@@ -144,7 +144,7 @@ In this paper, we develop a comprehensive PPE of JULES-ES-1.0, and compare it wi
 
 Our approach could be regarded as a "top-down" initial exploration, in that we choose a large number (32) of parameters to vary simultaneously, we perturb them by a large margin due to the relatively weak beliefs we have about their true values, and a desire to explore a broad range of model sensitivities, and we focus on the model performance at global levels, averaged over long time periods. The approach is "data-lead" in that it relies on comparison with data to winnow out poor simulations and their corresponding parameter settings. An equally useful complementary approach might be "bottom up" - focusing on smaller numbers of parameters from individual processes within the land surface, perturbing those parameters by smaller amounts and focusing on regional or local details and seasonal time periods. However, we decided on the 'no regrets' top-down approach in which we risked a large number of ensemble members not producing a recognisable carbon cycle but with the view we would benefit most in our understanding of our model behaviours and sensitivities.
 
-We use a shortened version of "iterated refocussing" to sequentially constrain our model.  We first run an exploratory ensemble in section \ref{ssec:experiment_setup}, and remove any members (and their corresponding input parameter configurations) which produce obviously bad or no output in section \ref{ssec:failure-analysis}. We use the remaining members to build a Gaussian process emulator, and then and then run a second wave ensemble with members chosen from input parameter regions calculated to have a good chance of producing model output consistent with observations. The formal part of this process uses a Gaussian process emulator and history matching to find the regions of input space that stand a good chance of producing realistic model output. Details of this process are outlined in section \ref{ssec:history_matching}. The intention is that any further work on building ensembles in the future could go ahead from the basis that model variants get the global overview correct, and go on to further constrain the model by focusing on finer details. This would avoid being over-focused on finer regional or temporal details, at the expense of large-scale behaviour.
+We use "iterated refocussing" to sequentially constrain our model.  We first run an exploratory ensemble in section \ref{ssec:experiment_setup}, and remove any members (and their corresponding input parameter configurations) which produce obviously bad or no output in section \ref{ssec:failure-analysis}. We use the remaining members to build a Gaussian process emulator, and then and then run a second wave ensemble with members chosen from input parameter regions calculated to have a good chance of producing model output consistent with observations. The formal part of this process uses a Gaussian process emulator and history matching to find the regions of input space that stand a good chance of producing realistic model output. Details of this process are outlined in section \ref{ssec:history_matching}. The intention is that any further work on building ensembles in the future could go ahead from the basis that model variants get the global overview correct, and go on to further constrain the model by focusing on finer details. This would avoid being over-focused on finer regional or temporal details, at the expense of large-scale behaviour.
 
 Next, we use all valid ensemble members from both waves to build a new set of more accurate Gaussian process emulators, and find the best estimate of the input space where the model is likely to produce output that matches reality in section \ref{ssec:constraining_input_space_emulator}.
 
@@ -154,24 +154,10 @@ Finally, we discuss how these results help us learn about the model in section \
 
 \subsection {Experiment setup}\label{ssec:experiment_setup}
 
-As stated in the preceding section, the aim of the experiment is to iteratively constrain the land surface model by subjecting it to increasingly demanding comparisons with reality. The experiment consists of two ensembles, or "waves", the first being exploratory, and the design of the second informed by the outcome of the first.  We outline some of the technical details of setting up the experiment in this section.
+The aim of the experiment is to iteratively constrain the land surface model by subjecting it to increasingly demanding comparisons with reality. The experiment consists of two ensembles, or "waves", the first being exploratory, and the design of the second informed by the outcome of the first.  We outline some of the technical details of setting up the experiment in this section.
 
 We wish to isolate the effects of uncertain parameters on the land surface, rather than evaluating the effects of climate biases, or interactions with other components of UKESM1.0. We therefore run the first wave of JULES-ES-1.0 in an ensemble, with each member driven by the same historical climate data - a reanalysis from the Global Soil Wetness project, phase 3 \citep{kim2017global}. The simulations include land-use change and rising atmospheric CO$_2$ following the LS3MIP protocol \citep{gmd-9-2809-2016} spun-up to a pre-industrial state in 1850 by cycling the 1850-1869 climate but with fixed 1850 CO2 concentrations. A total of 1000 years spin up is performed then each member is run transiently through to 2014. Each ensemble member has a different configuration of 32 input parameters, identified as potentially important in influencing land surface dynamics (see appendix table \ref{table:Parameters} for a full list of perturbed parameters). The parameters were perturbed randomly, in a maximin Latin hypercube configuration \citep{mckay1979comparison}, shown to be an effective space-filling design for building accurate emulators \citep{urban2010comparison}. Parameter ranges were defined by the model developers as being likely to at least produce output from the model. We identify model variants, and their associated input configurations, where the model produces output that is consistent - within uncertain limits - with modern observations of the carbon cycle. We use Gaussian process emulators trained individually on each type of model output of interest to allow us to visualise and explore these relationships as if we had a much larger ensemble.
 
-%Using the ensemble and the emulators, we are able to generate a number of analyses that inform us of the drivers of model behaviour, and the source of model biases and errors. We first provide a failure analysis, which allows us to identify parameter setting which cause failure of the model to run. We perform sensitivity analysis, which helps us quantify the effect of perturbing parameters on the model output.
-
-%Finding model outputs which match modern observations, we identify parts of input parameter space where the model output is acceptably good. We can rule out parameter settings where the output is not plausible. Constraining using each output in turn allows us to see which outputs are useful for constraining particular inputs. We see relationships between outputs manifest as joint constraint: when one output is used to constrain inputs, this induces a constraint on other, related outputs.
-
-%Having constrained both input parameter space and model outputs using modern observations of the carbon cycle, we examine the impact of the modelled carbon budget through time. What is the potential for constraining the carbon budget using only modern observations? What happens if we extend those observations back through time?
-
-%Our analysis informs the construction a new ensemble design, with ensemble members picked to lie within the input space not ruled out by a comparison of the model behaviour with modern observations. 
-
-%Our aim was to run an iterated experiment to create an ensemble of JULES runs that would allow  a number of different types of analysis. Our objectives were 1) to find an ensemble of JULES runs that would represent (and span) uncertainty in both model input parameters and historical land surface behaviour, thus creating a basis ensemble for a UQ analysis of past behaviour and future projections. 2) Explore if some uncertain input parameters could be constrained by comparison of the model outputs with observational data and 3) To create an ensemble that could be used for sensitivity analyses, identifying the most important inputs. 
-
-
-%Many climate model experiments have only a limited amount of computational budget, and modellers must decide how to spend that budget. While JULES-ES-1.0 is relatively cheap, and in practice we were not constrained (within reason) by computational budget, we decided to mimic a full climate model experiment. Such an experiment might have access to a few tens to a few thousand model runs. We decided to run the experiment with approximately 1000 runs, somewhere near the middle of this range.
-
-%Our experiment was inspired by the history matching procedure, otherwise known as "iterated refocussing", in which an initial ensemble is run, ensemble members (and the associated input space) deemed too far from reality are ruled out, and a further wave of ensemble members are run in the input space that has not been ruled out yet. At each stage, a surrogate model, or emulator is trained on the model outputs, predicting model output at inputs not yet run. This emulator is used to predict which inputs will not be ruled out in the next wave, and for new design points to be selected from these candidates. The emulator should become more accurate in the valid input space at each wave. As this was an exploratory design process, we did not attempt to optimise this process by selecting an ideal number of runs for each stage, but instead chose reasonable numbers, before deciding to go further if necessary.
 
 \subsection{Land surface model}\label{ssec:land_surface_model}
 
@@ -185,23 +171,23 @@ The initial ensemble must explore the limits of parameter space, and ensure that
 
 Many of the input parameters have different values for the 13 different PFTs in JULES. If each of these were perturbed independently, there would potentially be an intolerably large input space. Even accounting for the fact that many of the input settings would not be available (for example, perturbing some input values too far would effectively turn one PFT into another), input space would still be of very high dimension. In addition, each input setting would need careful thought from the modeller, and the resulting input space would be highly non-cuboid and complex. This would require a very large input of time and effort from both modellers and statisticians.
 
-To combat this explosion of dimensions and effort, we chose the pragmatic option to perturb each of the PFTs together, by a multiplication factor for each parameter. This choice was computationally convenient for a top-down, globally averaged experiment, but we see great potential for optimising the values of these parameters for individual PFTs in further work (a good example is \cite{gmd-15-1913-2022}. Many of the "multiplication factors" varied the parameter range between a half (0.5) and double (2) the parameter standard value. Some parameters were a switch, and so were set at zero or one. When the design was generated on a 0-1 axis, the design points were simply rounded to zero or one in this parameter.
+To combat this explosion of dimensions and effort, we chose the pragmatic option to perturb each of the PFTs together, by a multiplication factor for each parameter. This choice was computationally convenient for a top-down, globally averaged experiment, but we see great potential for optimising the values of these parameters for individual PFTs in further work (a good example is \cite{gmd-15-1913-2022}). Many of the "multiplication factors" varied the parameter range between a half (0.5) and double (2) the parameter standard value. Some parameters were a switch, and so were set at zero or one. When the design was generated on a 0-1 axis, the design points were simply rounded to zero or one in this parameter.
 
 \begin{figure*}[t]
 \includegraphics[width=12cm]{./figs/fig01.pdf}
-\caption{Parameter multiplication factor ranges the ensemble design.}
+\caption{Parameter multiplication factor ranges the initial ensemble (wave00) design.}
 \label{fig:lhs_range}
 \end{figure*}
 
 \section{Sequential constraint}\label{sec:sequential_constraint}
 
-Our "iterated refocussing" experiment uses a combination of formal and informal methods to sequentially constrain input parameter space and model behaviour, dependent on both expertise and expectation of the modeller, and on more formal comparison with observational data. An important aim for the initial ensemble is primarily to train a good surrogate model, and therefore we require relatively smooth output across the inputs space, without discontinuities or highly nonlinear behaviour that might bias an emulator. Our initial constraint procedures set out to achieve this.
+Our "iterated refocussing" experiment uses a combination of formal and informal methods to sequentially constrain input parameter space and model behaviour, dependent on both expertise and expectation of the modellers, and on more formal comparison with observational data. An important aim for the initial ensemble is primarily to train a good surrogate model, and therefore we require relatively smooth output across the inputs space, without discontinuities or highly nonlinear behaviour that might bias an emulator. Our initial constraint procedures set out to achieve this.
 
 Our initial (wave00) ensemble of 499 members is sequentially constrained; to "Level0" by removing 24 ensemble members which do not run (see section \ref{ssec:failure-analysis}), to "Level 1" by removing the 50 remaining ensemble member outside of the threshold in $F0$ identified in section \ref{ssec:failure-analysis}, and "Level 1a" by removing the 64 remaining members outside the threshold in $b\_wl\_io$. This leaves us with a wave00 "level 1a" ensemble of 361 members that at least run and have a minimally functioning carbon cycle.
 
 \subsection{Failure analysis}\label{ssec:failure-analysis}
 
-We analyse the ensemble to remove ensemble members and corresponding parts of parameter space that very obviously cannot hope to produce a useful simulation of the carbon cycle. First, we map ensemble members where the simulator failed to complete a simulation, perhaps due to numerical error (termed "failed"). Second, we identify parts of parameter space where important parts of the carbon cycle are completely missing - that is, basic carbon cycle quantities are at or close to zero at the end of the run (termed "zero carbon cycle"). For this second class, we choose a threshold of mean modern global NPP close to zero.
+We analyse the ensemble to remove ensemble members and corresponding parts of parameter space that very obviously cannot hope to produce a useful simulation of the carbon cycle. First, we map ensemble members where the simulator failed to complete a simulation, perhaps due to numerical error (termed "failed"). Second, we identify parts of parameter space where important parts of the carbon cycle are completely missing - that is, basic carbon cycle quantities are at or close to zero at the end of the run (termed "zero carbon cycle"). For this second class, we choose a threshold of mean modern global NPP close to zero ($<10^{-5}$).
 The nature of perturbed parameter ensembles is that there is often a setting of some parameters that makes up for a poor choice of a particular parameter, and so outright and easily identifiable thresholds for failure in the marginal range of a particular parameter are rare. However, careful visualisation and analysis can give the modeller a good idea of regions of parameter space that can be removed, or parameters that the model is particularly sensitive to.
 
 In fig. \ref{fig:run-failure-pairs}, we see a pairs plot of "failed" runs (upper right panels) and, "zero carbon cycle" panels (lower left panels). The plot shows the two-dimensional projections of run failures against each pair of inputs, allowing visual identification of inputs that control failures, and any potential two-way interactions.
@@ -215,7 +201,7 @@ For example, we can see that both $f0\_io$ and $b\_wl\_io$ have important thresh
 
 \begin{figure*}[t]
 \includegraphics[width=12cm]{./figs/fig02.pdf}
-\caption{Pairs plot of the locations in (normalised) input space of the ensemble members that did not run/failed.}
+\caption{Two-dimensional projections of the input parameter values in normalised input space of the ensemble members that failed or had zero carbon cycle.}
 \label{fig:run-failure-pairs}
 \end{figure*}
 
@@ -226,7 +212,7 @@ The globally averaged carbon cycle and land surface behaviour of the level1a - c
 
 \begin{figure*}[t]
 \includegraphics[width=12cm]{./figs/fig03.pdf}
-\caption{Primary carbon cycle quantities in the JULES ensemble.}
+\caption{Timeseries of absolute carbon cycle quantities in the JULES ensemble at increasingly strict levels of constraint.}
 \label{fig:carbon-cycle-timeseries-waves-constrained}
 \end{figure*}
 
@@ -235,13 +221,13 @@ The globally averaged carbon cycle and land surface behaviour of the level1a - c
 %%f
 \begin{figure*}[t]
 \includegraphics[width=12cm]{./figs/fig04.pdf}
-\caption{Primary carbon cycle anomaly quantities in the JULES ensemble.}
+\caption{Timeseries of carbon cycle anomaly quantities in the JULES ensemble at increasingly strict levels of constraint.}
 \label{fig:carbon-cycle-timeseries-anomaly-waves-constrained}
 \end{figure*}
 
 The ensemble displays a very wide range of both absolute levels and changes in a selection of carbon cycle and land surface properties, compared to the model run at standard settings (black). For example, global total NPP runs from approximately zero to over 150 GtC/year. Soil carbon stocks are between zero and more than 4000 GtC, and Vegetation stocks range from 0 to over 2000 GtC.
 
-A large number of first wave (wave00) ensemble members have a hugely diminished carbon cycle and carbon cycle stocks compared to the standard member. This can be seen from examining fig. \ref{fig:carbon-cycle-timeseries-waves-constrained} compared to the values of the standard member (black lines). In particular, most ensemble members have a very low tree fraction, and a higher bare soil fraction than the standard member - It seems particularly easy to kill global forests when perturbing parameters. Vegetation and soil carbon levels are very low. 
+A large number of first wave (wave00) ensemble members have a hugely diminished carbon cycle and carbon cycle stocks compared to the standard member. This can be seen from examining fig. \ref{fig:carbon-cycle-timeseries-waves-constrained} compared to the values of the standard member (black lines). In particular, most ensemble members have a very low tree fraction, and a higher bare soil fraction than the standard member - It seems particularly easy to kill global forests when perturbing parameters. Vegetation and soil carbon levels are also very low in many members. 
 
 Often, perturbing parameters affects the overall level of the carbon cycle property, with its behaviour through time being only a secondary source of variance at the end of the model run. That is, the carbon cycle level at the end of the run is more closely related to its level at the beginning of the run than it is to its change over time. However, there is variability in the behaviour of the carbon cycle over time, as can be seen in fig. \ref{fig:carbon-cycle-timeseries-anomaly-waves-constrained}. Here, we examine a selection of the most important carbon cycle properties, and examine their change in behaviour over time, or anomaly from the starting value. We see for example, that changing the parameters can make soil and vegetation carbon increase or decrease over the simulated century and a half of the model run. 
 
@@ -249,7 +235,7 @@ Often, perturbing parameters affects the overall level of the carbon cycle prope
 
 We can constrain both the historical behaviour of the model and the model parameter input space by comparison of the model behaviour with the expectations of the model developers; with those expectations set by knowledge of observations and, when those are uncertain or unavalable, by first principles and model simulations from independent groups. A simple way to constrain the historical behaviour of the carbon cycle is by removing from the ensemble those model runs (and their corresponding input parameter settings) that lead to seemingly implausible values of basic carbon cycle quantities in the modern era.
 
-We choose a small number of broad constraints that the model must adhere to in order to be considered a valid and useful simulation. The constraints are four basic carbon cycle properties, globally averaged for 20 years near the beginning of the 21st century. They are net biome production (NBP), net primary production (NPP), and the land surface stocks of soil and vegetation carbon (cSoil and cVeg respectively). We choose generous limits on what might be called valid, roughly in line with the range of the CMIP5 Earth system model multi-model ensemble of opportunity. These constraints are outlined in table \ref{table:level_2_constraints}. We designate these limits the "level 2" constraints.
+We choose a small number of broad constraints that the model must adhere to in order to be considered a valid and useful simulation. The constraints are four basic carbon cycle properties, globally averaged over the final 20 years of the simulations, near the beginning of the 21st century (1995 - 2014). They are net biome production (NBP), net primary production (NPP), and the land surface stocks of soil and vegetation carbon (cSoil and cVeg respectively). We choose generous limits on what might be called valid, roughly in line with the range of the CMIP5 Earth system model multi-model ensemble of opportunity. These constraints are outlined in table \ref{table:level_2_constraints}. We designate these limits the "level 2" constraints.
 
 Only a very small proportion of ensemble members (38 out of 499) conform to the basic "level 2" constraints expected of a useful model by our modeller. We would like to have a larger number of ensemble members in this range, so that any emulator we build has enough detail to be useful, and we can accurately map out viable input space. We wish to run more ensemble members within a valid input space, and so we formally history match to the level 2 space, in order to generate an input design for a second wave of ensemble members. We describe this process in section \ref{ssec:history_matching}.
 
@@ -273,7 +259,7 @@ Level 2  & NPP, NBP, cVeg and cSoil \\
 
 
 \begin{table*}[t]
-\caption{Output limits to be met over the last decade of simulation to match "Level 2" constraints.}
+\caption{Output limits to be met over the last two decades of simulation to match "Level 2" constraints.}
 \label{table:level_2_constraints}
 \begin{tabular}{l r r}
 \tophline
@@ -323,9 +309,7 @@ We reject any input as implausible where $I >3$ after Pukelsheim's three-sigma r
 
 \subsection{Second wave design}\label{ssec:second_wave_design}
 
-We wish to generate design points for the second wave (wave01) which we believe will generate output that is not implausible: that is where $I<3$ according to equation \ref{eq:implausibility}. As seen in the first wave (wave00), randomly sampling from across \emph{a priori} plausible input space generates a large number of ensemble members which do not look like reality.
-
-Our strategy to increase the proportion which generate realistic output is to use the Gaussian process emulator to predict model output, generate a large number of potential candidates for new design points, and history match to reject candidates we believe will lead to implausible output.
+We wish to generate design points for the second wave (wave01) which we believe will generate output that is not implausible: that is where $I<3$ according to equation \ref{eq:implausibility}. As seen in the first wave (wave00), randomly sampling from across \emph{a priori} plausible input space generates a large number of ensemble members which do not look like reality. Our strategy to increase the proportion which generate realistic output is to use the Gaussian process emulator to predict model output, generate a large number of potential candidates for new design points, and history match to reject candidates we believe will lead to implausible output.
 
 After building a Gaussian process emulator for each of the four "modern value constraint outputs" (NBP, NPP, cSoil and cVeg), we generate a large number (50,000) samples uniformly from the \emph{a priori} not implausible input space. We calculate $I$ for each of these samples, for each of the 4 outputs. 
 
@@ -336,11 +320,9 @@ From the subset of samples where $I < 3$ (i.e. NROY) for all four outputs, we sa
 
 \subsection{Second wave results}\label{ssec:second_wave_results}
 
-A summary of the output of the second wave in the modern constraint variables can be seen in figure \ref{fig:level_2_constraints_hists}, compared to the same output from the first wave, constrained to level 1a. If the history matching process was perfect, 95\% of ensemble members would have output within the specified constraints (denoted by the grey region in the histograms). As there is uncertainty in the emulator, the majority of the second wave ensemble members fall outside of these constraints. Of the 500 new members, we keep back 100 for later validation purposes. of the remaining 400, 128 (32\%) conform to all four constraints, compared with 27 out of 499 (7.4\%) of the initial ensemble.
+A summary of the output of the second wave in the modern constraint variables can be seen in figure \ref{fig:level_2_constraints_hists}, compared to the same output from the first wave, constrained to level 1a. If the history matching process was perfect, 95\% of ensemble members would have output within the specified constraints (denoted by the grey region in the histograms). As there is uncertainty in the emulator, the majority of the second wave ensemble members fall outside of these constraints. Of the 500 new members, we keep back 100 for validation purposes in future studies. of the remaining 400, 128 (32\%) conform to all four constraints, compared with 27 out of 499 (7.4\%) of the initial ensemble.
 
-It is worth noting, however, that the proportion of ensemble members in the second wave that match the constraints is much higher, and that majority of ensemble members in the second wave fall within any one individual constraint. It is only when these constraints are combined that the majority are ruled out. A possible cause of the relatively small number of ensemble members that fall into the level 2 constraints is one or more poor emulators. We investigate this possibility in appendix section \ref{app:level_2_pred}, and conclude that this is likely the emulator for cVeg consistently predicting low, particularly for the higher (and more realistic) values of cVeg.
-
-The average value of NBP, NPP, cSoil and cVeg has moved up in the second wave. There are no ensemble members that fail to run in the second wave, nor are there any that have a "zero carbon" world, but there are 10 that have numerical problems and unusual values in their timeseries, and these are excluded from our analysis.
+It is worth noting, however, that the proportion of ensemble members in the second wave that match the constraints is much higher, and that majority of ensemble members in the second wave fall within any one individual constraint. It is only when these constraints are combined that the majority are ruled out. A possible cause of the relatively small number of ensemble members that fall into the level 2 constraints is one or more poor emulators. We investigate this possibility in appendix section \ref{app:level_2_pred}, and conclude that this is likely the emulator for cVeg consistently predicting low, particularly for the higher (and more realistic) values of cVeg. The average value of NBP, NPP, cSoil and cVeg has moved up in the second wave. There are no ensemble members that fail to run in the second wave, nor are there any that have a "zero carbon" world, but there are 10 that have numerical problems and unusual values in their timeseries, and these are excluded from our analysis.
 
 \begin{figure*}[t]
 \includegraphics[width=12cm]{./figs/fig05.pdf}
@@ -371,7 +353,7 @@ Constraining the ensemble by directly rejecting implausible members gives us a u
 
 We visualise the constrained input parameter space with the help of an emulator. We can use the trained emulator in place of the full simulator JULES-ES-1.0, examining the inputs where the emulator predicts that the simulated outputs would match our constraints. Because the emulator is orders of magnitude cheaper to evaluate, we can take many thousands of samples from input space and predict whether the simulator would match the constraints. This means that diagrams that summarise the input spaces can show densities of input points with a much higher resolution. The trade-off is that the emulator does not perfectly predict simulator output, and so visualisations of constrained input space are approximate. However, we judge that the emulator is accurate enough to provide useful insights, given the error and validation studies in appendix \ref{app:emulator_accuracy}.
 
-We fit a Gaussian process emulator to each of the modern constraint outputs using the 751 members of both ensemble waves that have a non-zero carbon cycle. We take $10e5$ samples uniformly from across the original normalised input space, and reject all emulated members where the corresponding mean predicted output does not conform to the level 2 constraints. We plot two dimensional projections of the the density of accepted points in figure \ref{fig:pairs_level2_ix_em_unif_wave00_wave01}, colour coded by relative density. Blue areas show regions where there is a high concentration of accepted points, and we would expect a high probability of a model run in at this input location producing a valid carbon cycle.
+We fit a Gaussian process emulator to each of the modern constraint outputs using the 751 members of both ensemble waves that have a non-zero carbon cycle. We take $10^{5}$ samples uniformly from across the original normalised input space, and reject all emulated members where the corresponding mean predicted output does not conform to the level 2 constraints. We plot two dimensional projections of the the density of accepted points in figure \ref{fig:pairs_level2_ix_em_unif_wave00_wave01}, colour coded by relative density. Blue areas show regions where there is a high concentration of accepted points, and we would expect a high probability of a model run in at this input location producing a valid carbon cycle.
 
 We calculate the proportion of space that conforms to the level 2 constraints as approximately the proportion of samples - the large number of samples assures that the sampling uncertainty is small. Approximately 12\% of the initial input space conforms to all four level 2 constraints.
 
@@ -379,7 +361,7 @@ We calculate the proportion of space that conforms to the level 2 constraints as
 
 Global sensitivity analysis calculates the impact of changes in input parameters on simulator outputs, when inputs are perturbed across the entire valid input space. This is in contrast to a local sensitivity analysis, which calculates the impacts of small deviations from a set of default values. The two types of analysis are useful in different contexts: in our case, we have large uncertainties relating to a number of inputs, model processes and observations, and so a global sensitivity analysis as a form of "screening" of important input parameters is appropriate.
 
-We use a set of Gaussian process emulators, fit to each of the JULES-ES-1.0 land surface summary outputs to perform two types of global sensitivity analysis. We use the set of Gaussian process emulators fit to each of the outputs used for our "level 2" constraint for a third kind of sensitivity analysis. Each type of sensitivity analysis tells us slightly different things about the relationship between the inputs and outputs of JULES-ES-1.0. At the end of this section, we summarise the results of all three types of sensitivity analysis in order to suggest which inputs might be prioritised in any future experiment.
+We use a set of Gaussian process emulators, fit to each of the JULES-ES-1.0 land surface summary outputs to perform two types of global sensitivity analysis. We use the set of Gaussian process emulators fit to each of the outputs used for our "level 2" constraint for a third kind of sensitivity analysis. Each type of sensitivity analysis tells us different things about the relationship between the inputs and outputs of JULES-ES-1.0. At the end of this section, we summarise the results of all three types of sensitivity analysis in order to suggest which inputs might be prioritised in any future experiment.
 
 Our aim is to give the modeller quantitative information on which inputs affect which outputs, to direct effort for reducing model biases and errors, and to indicate regions of parameter space where the model might perform better. We might identify parameters which have a direct impact on model output which does not conform to observations, identify groups of parameters withing a poorly performing process, or help modellers sample uncertainty in other model applications..
 
@@ -389,11 +371,11 @@ A one-at-a-time (OAAT) sensitivity gives a simple and easy-to-interpret measure 
 
 An OAAT analysis can be completed with a relatively small number of model runs - for example, a low, middle and high run for each parameter in our 32 input dimension example would take fewer than 100 runs. However, using an emulator allows us to better characterise the response of the model across the entire range of each parameter, which would take many more dedicated runs if completed using just the model.
 
-We fit a Gaussian process emulator to each global summary output, both as a ``modern value'' (mean of 1994 - 2014), and as an ``anomaly" (change since 1850-1870). We use the 751 members from both wave00 and wave01 that conform to the level1a constraints, being as wide an input space as possible without significant model failure.
+We fit a Gaussian process emulator to each global summary output, both as a ``modern value'' (mean of 1995 - 2014), and as an ``anomaly" (change since 1850-1869). We use the 751 members from both wave00 and wave01 that conform to the level1a constraints, being as wide an input space as possible without significant model failure.
 
 We sample from the input space in a one-at-a-time fashion: each input is sampled uniformly across it's input space, with all other inputs held at standard values (note, these are often not the central value when normalized to 0-1 range). The variance of the mean emulated output as each input is varied is then used as a measure of the sensitivity of that output to the corresponding input. Variance is used as opposed to magnitude of change, as we expect some model outputs not to rise or fall monotonically as an input varies.
 
-Different model outputs are clearly sensitive to different model inputs, and so we also seek ways of summarising sensitivity across model outputs. One method is simply to find the mean effect across model outputs. Sensitivities are normalised so that they lie in a $[0 -1]$ range for each output. Summary measures for each input are then averaged across all outputs, and the plotted inputs are ranked by their average influence across all outputs. Individual sensitivities and summaries can be seen in fig. \ref{fig:oat_var_sensmat_level1a_wave01_Y} for the modern value, and in fig. \ref{fig:oat_var_sensmat_level1a_wave01_Anom} for the change over the historic period of the ensemble. 
+Different model outputs are clearly sensitive to different model inputs, and so we also seek ways of summarising sensitivity across model outputs. One method is simply to find the mean effect across model outputs. Sensitivities are normalised so that they lie in a $[0 -1]$ range for each output. Summary measures for each input are then averaged across all outputs, and the plotted inputs are ranked by their average influence across all outputs. Individual sensitivities and summaries can be seen in fig. \ref{fig:oat_var_sensmat_level1a_wave01_Y} for the modern value, and in fig. \ref{fig:oat_var_sensmat_level1a_wave01_Anom} for the change over the historic period of the ensemble. We see that for both modern value and anomaly, by this measure only half or fewer of the inputs have discernible impact on global outputs.
 
 \begin{figure}[t]
 \includegraphics[width=12cm]{./figs/fig07.pdf}
@@ -407,12 +389,6 @@ Different model outputs are clearly sensitive to different model inputs, and so 
 \label{fig:oat_var_sensmat_level1a_wave01_Anom}
 \end{figure}
 
-\subsection{FAST sensitivity analysis}\label{ssec:sa_fast}
-
-We use Fourier Amplitiude Sensitivity Test (FAST) as a further measure of global sensitivity of the model outputs to its inputs. The test is administered as the FAST99 algorithm of \cite{saltelli1999sensitivity}, through the R package Sensitivity \citep{Rpackage2015sensitivity}. Again, this algorithm requires a large number of model runs, and so we use emulated model outputs in place of dedicated model runs, as previously used in \cite{mcneall2020correcting, mcneall2016impact, carslaw2013large}. This comes at the cost of a risk of inaccuracy, as the emulated model outputs won't perfectly reproduce the true model runs at the corresponding inputs. However, the emulator is shown to work adequately for the model outputs in appendix \ref{app:emulator_accuracy}. 
-
-A FAST gives both first order and interaction effects: we sum these together to calculate a total sensitivity index, to make showing the results across a large number of outputs simpler. Individual results for FAST can be seen in appendix \ref{app:sa_fast}, and the summarised results are used in our analysis in section \ref{ssec:sa_ranking}
-
 \subsection{Sensitivity of constraint outputs}\label{ssec:sa_constraint_outputs}
 
 We add detail to our one-at-at-time sensitivity of important outputs - those that we use for constraining JULES-ES-1.0 in figure \ref{fig:Y_oaat_const_level1a_wave01_scaled_norm}. We plot the emulated mean of the each of four outputs - NBP, NPP, vegetation carbon and soil carbon, as each parameter in increased from its minimum to maximum range. Uncertainty bounds from the emulator predictions are not plotted, in order to more clearly see the estimated main effect of each parameter.
@@ -425,10 +401,16 @@ For each input, we can see the default value as a vertical dashed line. This plo
 \label{fig:Y_oaat_const_level1a_wave01_scaled_norm}
 \end{figure*}
 
+\subsection{FAST sensitivity analysis}\label{ssec:sa_fast}
+
+We use Fourier Amplitiude Sensitivity Test (FAST) as a further measure of global sensitivity of the model outputs to its inputs. The test is administered as the FAST99 algorithm of \cite{saltelli1999sensitivity}, through the R package Sensitivity \citep{Rpackage2015sensitivity}. Again, this algorithm requires a large number of model runs, and so we use emulated model outputs in place of dedicated model runs, as previously used in \cite{mcneall2020correcting, mcneall2016impact, carslaw2013large}. This comes at the cost of a risk of inaccuracy, as the emulated model outputs won't perfectly reproduce the true model runs at the corresponding inputs. However, the emulator is shown to work adequately for the model outputs in appendix \ref{app:emulator_accuracy}. 
+
+A FAST gives both first order and interaction effects: we sum these together to calculate a total sensitivity index, to make showing the results across a large number of outputs simpler. Individual results for FAST can be seen in appendix \ref{app:sa_fast}, and the summarised results are used in our analysis in section \ref{ssec:sa_ranking}
+
 
 \subsection{Monte Carlo Filtering}\label{ssec:sa_MCF}
 
-Monte Carlo filtering (MCF) is a type of sensitivity analysis that integrates well with our aim of constraining model behaviour given a large ensemble using ensemble member rejection, or History matching. The idea of MCF is to identify inputs that have an influence on whether the behaviour of the model falls within or outside acceptable bounds. This is done by splitting samples of model behaviour into those that do or don't meet some constraint, and then summarising the difference between the cumulative distributions of the corresponding input variables. The larger the difference between the cumulative distributions, the more influence the parameter has on whether the model passes the constraint.
+Monte Carlo filtering (MCF) is a type of sensitivity analysis that integrates well with our aim of constraining model behaviour given a large ensemble using ensemble member rejection, or history matching. The idea of MCF is to identify inputs that have an influence on whether the behaviour of the model falls within or outside acceptable bounds. This is done by splitting samples of model behaviour into those that do or don't meet some constraint, and then summarising the difference between the cumulative distributions of the corresponding input variables. The larger the difference between the cumulative distributions, the more influence the parameter has on whether the model passes the constraint.
 
 A description of MCF and its uses can be found in \cite{pianosi2016sensitivity}. \cite{mcneall2020correcting} uses MCF to estimate parameter sensitivity in the land surface model element of a climate model of intermediate complexity.
 
@@ -524,7 +506,7 @@ In this study we were able to produce a perturbed parameter ensemble of land sur
 
  An initial design, purposely chosen to produce a wide range of ensemble behaviour, generated only a very small number of members (37/499) that would conform to a set of four basic constraints on global carbon cycle and land surface properties. In this "first wave" of model simulations, there were identifiable marginal limits for parameters $b_wl_io$ and $f0_io$ that caused the simulation to fail, or to produce zero-carbon-cycle climates. These limits were quite near the initial design limits and removing outliers therefore didn't shrink input space much.
  
- We were able to train Gaussian process emulators of global mean summaries of many land surface properties, with mean absolute errors all less than 10\% of the span of the ensemble. After using the emulators to predict outputs that would fall within reasonable constraints in the four key outputs, 128 of 400 members of a second wave of simulations complied with the constraints. Emulator performance improved for most outputs after adding data from the  second wave to the training set- particularly for those members that passed the level 2 constraints. This means that analyses will be more accurate and have less uncertainty than they would have when training with only the initial ensemble. Constraining input space to the four basic (Level 2) using the emulator removed 88\% of initial input parameter space, but marginal ranges were hard to constrain. There were "induced constraints" on a number of outputs (but not all), when the ensemble output is constrained using the 4 basic properties.
+ We were able to train Gaussian process emulators of global mean summaries of many land surface properties, with mean absolute errors all less than 10\% of the span of the ensemble. After using the emulators to predict outputs that would fall within reasonable constraints in the four key outputs, 128 of 400 members of a second wave of simulations complied with the constraints. Emulator performance improved for most outputs after adding data from the second wave to the training set - particularly for those members that passed the level 2 constraints. This means that analyses will be more accurate and have less uncertainty than they would have when training with only the initial ensemble. Constraining input space to the four basic (Level 2) using the emulator removed 88\% of initial input parameter space, but marginal ranges were hard to constrain. There were "induced constraints" on a number of outputs (but not all), when the ensemble output is constrained using the 4 basic properties.
     
 We used 3 types of global sensitivity analysis to identify the most (and least) important parameters.  A number of inputs which have very little impact on global output were identified, and would be recommended to be excluded from further analyses in order to simplify the input space and improve emulator performance. Detailed information on the relationship between individual parameters and global mean outputs will be useful to modellers identifying ways to improve the simulator. A focus on the key uncertain parameters will be useful for modellers, to inform future improvements of JULES, ahead of the next generation Earth system models.
 
@@ -557,38 +539,38 @@ A table of input parameters and their descriptions can be seen in table \ref{tab
 Parameter & Description  \\ 
 \middlehline
 
-alpha\_io & Quantum efficiency (mol CO2 per mol PAR photons). \\ 
-  lai\_max\_io & Maximum LAI. \\ 
+alpha\_io & Quantum efficiency (mol CO$_2$ per mol PAR photons). \\ 
+  lai\_max\_io & Maximum leaf area index (LAI). \\ 
   b\_wl\_io & Allometric exponent relating the target woody biomass to the leaf area index.\\ 
   fd\_io & Scale factor for dark respiration.\\ 
   g\_area\_io &  Disturbance rate (/360days).\\ 
-  n\_inorg\_turnover &Parameter controlling the lifetime of the inorganic N pool. \\ 
+  n\_inorg\_turnover & Parameter controlling the lifetime of the inorganic N pool. \\ 
   r\_grow\_io & Growth respiration fraction.\\ 
-  lma\_io & Leaf mass per unit area (kgLeaf m-2). \\ 
-  a\_wl\_io & Allometric coefficient relating the target woody biomass to the leaf area index (kg carbon m-2). \\ 
+  lma\_io & Leaf mass per unit area (kgLeaf m$^{-2}$). \\ 
+  a\_wl\_io & Allometric coefficient relating the target woody biomass to the leaf area index (kgCm$^{-2}$). \\ 
   bio\_hum\_cn &  Parameter controlling ratio of C to N for BIO and HUM pools.\\ 
-  nmass\_io &  Top leaf nitrogen content per unit mass (kgN kgLeaf-1).\\ 
+  nmass\_io &  Top leaf nitrogen content per unit mass (kgN kgLeaf$^{-1}$).\\ 
   kaps\_roth &  Specific soil respiration rate for the RothC submodel for each soil carbon pool.\\ 
   hw\_sw\_io & Ratio of N stem to N heartwood (kgN/kgN) from the TRY database. \\ 
   tleaf\_of\_io & Temperature below which leaves are dropped (K).\\ 
-  dqcrit\_io & Critical humidity deficit (kg H2O per kg air). \\ 
-  lai\_min\_io & Minimum LAI. \\ 
-  tupp\_io & Upper temperature for photosynthesis (deg C). \\ 
+  dqcrit\_io & Critical humidity deficit (kg H$_2$O per kg air). \\ 
+  lai\_min\_io & Minimum leaf area index (LAI). \\ 
+  tupp\_io & Upper temperature for photosynthesis ($^\circ$C). \\ 
   retran\_l\_io & Fraction of retranslocated leaf N.\\ 
   rootd\_ft\_io & Parameter determining the root depth (m). \\ 
   l\_vg\_soil & Switch for van Genuchten soil hydraulic model. \\ 
   dz0v\_dh\_io & Rate of change of vegetation roughness length for momentum with height. \\ 
   f0\_io & CI / CA for DQ = 0. \\ 
-  sigl\_io & Specific density of leaf carbon (kg C/m2 leaf).\\ 
+  sigl\_io & Specific density of leaf carbon (kgCm$^{-2}$ leaf).\\ 
   g\_root\_io & Turnover rate for root biomass (/360days). \\ 
-  gs\_nvg\_io & Surface conductance (m s-1). \\ 
+  gs\_nvg\_io & Surface conductance (m s$^{-1}$). \\ 
   retran\_r\_io & Fraction of retranslocated root N.\\ 
   g\_wood\_io &  Turnover rate for woody biomass (/360days).\\ 
   nr\_io &  Root nitrogen concentration (kgN/kgC).\\ 
   knl\_io & Parameter for decay of nitrogen through the canopy, as a function of LAI.\\ 
   sorp & Parameter controlling the leaching of inorganic N through the soil profile. \\ 
-  dcatch\_dlai\_io &Rate of change of canopy capacity with LAI (kg m-2).  \\ 
-  tlow\_io & Lower temperature for photosynthesis (deg C).\\  
+  dcatch\_dlai\_io &Rate of change of canopy capacity with LAI (kgm$^{-2}$).  \\ 
+  tlow\_io & Lower temperature for photosynthesis ($^\circ$C).\\  
 \bottomhline
 \end{tabular}
 \belowtable{} % Table Footnotes
@@ -621,7 +603,7 @@ $$
 c(x,x') = (1 + \frac{\sqrt{5} | x - x'|}{\theta} + \frac{5 | x - x'|^2}{3 \theta^2})exp(- \frac{\sqrt{5} |x-x'|}{\theta})
 $$
 
-where $\theta$ describes the \emph{characteristic length scales} (or \emph{roughness parameters})- a measure of how quickly information about the function is lost moving away from a design point, in any dimension. 
+where $\theta$ describes the \emph{characteristic length scales} (or \emph{roughness parameters}): a measure of how quickly information about the function is lost moving away from a design point, in any dimension. 
 
 These, along with other hyperparameters are estimated via maximum likelihood estimation from the training set $(Y, X)$, so the approach is not fully Bayesian. We use Universal Kriging, with no `nugget' term, meaning that there is zero uncertainty on model outputs in the training set, and the mean prediction is forced through those points. 
 
@@ -640,7 +622,7 @@ We use a leave-one-out prediction metric to initially assess the quality of our 
 
 Figures \ref{fig:kmloostats_YAnom_wave00_level1a_wave01} and \ref{fig:kmloostats_YAnom_wave00_level1a_wave01}  show a summary plots of the actual value against the predicted value (the mean of the Gaussian process), and associated uncertainty (+- 2 standard deviations), for each output, for both "modern values", and "anomaly", or change in the output over the duration of the simulation. For each output, we include a summary of the performance across the ensemble in the form of the "proportional mean absolute error (PMAE)", which we define as the mean absolute error of prediction, when that error is expressed as a fraction of the range of the ensemble. The PMAE is calculated when all 751 members are used to train each GP emulator.
 
-For "modern value", We find that the PMAE ranges from between around 3\% and around 8\% of the range of the ensemble, with the emulator for fLuc\_lnd\_sum performing best (pmae=3.05\%), and shrubfrac\_lnd\_sum performing worst (pmae  8.25\%).
+For "modern value", We find that the PMAE ranges from between around 3\% and around 8\% of the range of the ensemble, with the emulator for fLuc\_lnd\_sum performing best (PMAE=3.05\%), and shrubfrac\_lnd\_sum performing worst (PMAE  8.25\%).
 
 For "anomaly", we find a similar range, with the emulator for fLuc\_lnd\_sum anomaly scoring a PMAE of 3.07\% and the poorest performance, of c4PftFrac\_lnd\_mean anomaly scoring a PMAE of 6.59\%.  \ref{fig:kmloostats_Y_wave00_level1a_wave01}) 
 %*need to label the subplots here*.
@@ -652,7 +634,7 @@ We see the value of including the extra ensemble members in the training set in 
 %%f
 \begin{figure*}[t]
 \includegraphics[width=12cm]{./figs/figA01.pdf}
-\caption{Leave-one-out summaries }
+\caption{Leave-one-out summaries of emulator fits for modern value carbon cycle quantities. First wave (wave00) is blue and the second wave (wave01) is red. }
 \label{fig:kmloostats_Y_wave00_level1a_wave01}
 \end{figure*}
 
@@ -662,7 +644,7 @@ We see the value of including the extra ensemble members in the training set in 
 %%f
 \begin{figure*}[t]
 \includegraphics[width=12cm]{./figs/figA02.pdf}
-\caption{Leave-one-out summaries }
+\caption{Leave-one-out summaries of emulator fits for modern value anomaly carbon cycle quantities. First wave (wave00) is blue and the second wave (wave01) is red. }
 \label{fig:kmloostats_YAnom_wave00_level1a_wave01}
 \end{figure*}
 
