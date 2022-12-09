@@ -82,7 +82,7 @@
 
 % \Author[affil]{given_name}{surname}
 
-\Author[1,2]{Doug}{McNeall}
+\Author[1,2]{Douglas}{McNeall}
 \Author[1]{Eddy}{Robertson}
 \Author[1,2]{Andy}{Wiltshire}
 
@@ -97,7 +97,7 @@
 %% If authors contributed equally, please mark the respective author names with an asterisk, e.g. "\Author[2,*]{Anton}{Aman}" and "\Author[3,*]{Bradley}{Bman}" and add a further affiliation: "\affil[*]{These authors contributed equally to this work.}".
 
 
-\correspondence{Doug McNeall (doug.mcneall@metoffice.gov.uk)}
+\correspondence{Douglas McNeall (doug.mcneall@metoffice.gov.uk)}
 
 \runningtitle{Constraining the carbon cycle in JULES-ES1.0}
 
@@ -530,7 +530,7 @@ Ultimately, the analyses used here could be extended, and applied to future expe
 
 A table of input parameters and their descriptions can be seen in table \ref{table:Parameters}.
 %t
-\begin{table*}[t]
+\begin{table*}[ht]
 \caption{Uncertain input parameters in JULES-ES-1p0}
 \label{table:Parameters}
 \begin{tabular}{l r}
@@ -631,7 +631,7 @@ We see the value of including the extra ensemble members in the training set in 
 %%% TWO-COLUMN FIGURES
 %
 %%f
-\begin{figure*}[t]
+\begin{figure*}[ht]
 \includegraphics[width=12cm]{./figs/figA01.pdf}
 \caption{Leave-one-out summaries of emulator fits for modern value carbon cycle quantities. First wave (wave00) is blue and the second wave (wave01) is red. }
 \label{fig:kmloostats_Y_wave00_level1a_wave01}
@@ -641,7 +641,7 @@ We see the value of including the extra ensemble members in the training set in 
 %%% TWO-COLUMN FIGURES
 %
 %%f
-\begin{figure*}[t]
+\begin{figure*}[ht]
 \includegraphics[width=12cm]{./figs/figA02.pdf}
 \caption{Leave-one-out summaries of emulator fits for modern value anomaly carbon cycle quantities. First wave (wave00) is blue and the second wave (wave01) is red. }
 \label{fig:kmloostats_YAnom_wave00_level1a_wave01}
@@ -650,11 +650,12 @@ We see the value of including the extra ensemble members in the training set in 
 %%% TWO-COLUMN FIGURES
 %
 %%f
-\begin{figure*}[t]
+\begin{figure*}[ht]
 \includegraphics[width=6cm]{./figs/figA03.pdf}
-\caption{Proportional mean absolute error (PMAE} summaries for selected JULES modern value (top) and anomaly (bottom) outputs. Horizontal axes show PMAE using only wave00 level 1a constrained outputs, while vertical axes show the same summary using wave00 and wave01 outputs. Outputs below the diagonal line show an overall improvement in emulator performance. 
+\caption{Proportional mean absolute error (PMAE) summaries for selected JULES modern value (top) and anomaly (bottom) outputs. Horizontal axes show PMAE using only wave00 level 1a constrained outputs, while vertical axes show the same summary using wave00 and wave01 outputs. Outputs below the diagonal line show an overall improvement in emulator performance. }
 \label{fig:PMAE_comparison}
 \end{figure*}
+
 
 \subsection{Predicting members that satisfy level 2 constraints}\label{app:level_2_pred} 
 
@@ -662,7 +663,7 @@ A useful measure of the practical utility of our emulator is the accuracy with w
 
 We perform a Leave-one-out cross validation on the outputs that we use for the level2 constraint, namely the modern-day value of the global sum of NBP, NPP, soil carbon and vegetation carbon. We show the results of the leave-one-out posterior mean predictions in fig. \ref{fig:Y_const_loo}. If we treat the posterior mean predictions as model runs, and constrain them using the same thresholds as the level 2 results, we can convert them into a binary forecast for whether they are "in" or "out" of the constraint. While this loses some information, it is a useful summary. We predict 20 ensemble members correctly as "in" the constraints, and 311 correctly as "out". We predict 14 incorrectly as "out" when they should be "in" (false negative) and 17 incorrectly as "in" when they should be "out". A contingency table summarising these results is presented in \ref{table:level_2_contingency}. We use the R verification package \cite{R2015verification} to calculate a number of skill scores, including the Equitable Threat Score (ETS), which we calculate at 0.34, and the Heidike Skill Score (HSS), which we calculate at 0.51. These scores (as well as the raw numbers) indicate that we have a predictive system, which could well be improved.
 
-\begin{table*}[t]
+\begin{table*}[ht]
 \caption{Confusion matrix for leave-one-out emulator predictions of whether the true model outputs conform to the level 2 output constraints}
 \label{table:level_2_contingency}
 \begin{tabular}{l l r r}
@@ -688,28 +689,31 @@ It appears that the initial design for the experiment was set too wide, with man
 
 
 
-\begin{figure*}[t]
+\begin{figure*}[ht]
 \includegraphics[width=12cm]{./figs/figA04.pdf}
 \caption{Leave-one-out summaries }
 \label{fig:Y_const_loo}
 \end{figure*}
 
+\clearpage
+
 \section{FAST sensitivity analysis details}\label{app:sa_fast}
 
 Summaries of FAST sensitivity analysis for both "modern value" and "anomaly" outputs of JULES-ES-1.0 can be found in fig. \ref{fig:FAST_sensmat_Y_level1a} and fig. \ref{fig:FAST_sensmat_YAnom_level1a} respectively.
 
-\begin{figure*}[t]
+\begin{figure*}[ht]
 \includegraphics[width=12cm]{./figs/figA05.pdf}
 \caption{FAST sensitivity analysis summary for modern value outputs.}
 \label{fig:FAST_sensmat_Y_level1a}
 \end{figure*}
 
-\begin{figure*}[t]
+\begin{figure*}[ht]
 \includegraphics[width=12cm]{./figs/figA06.pdf}
 \caption{FAST sensitivity analysis summary for anomaly outputs.}
 \label{fig:FAST_sensmat_YAnom_level1a}
 \end{figure*}
 
+\clearpage
 
 
 \noappendix       %% use this to mark the end of the appendix section. Otherwise the figures might be numbered incorrectly (e.g. 10 instead of 1).
