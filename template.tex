@@ -349,7 +349,7 @@ A summary of the induced constraints can be seen in fig. \ref{fig:induced_constr
 While a useful measure, this is somewhat prone to outliers in the initial ensemble, and so examining the timeseries in fig. \ref{fig:carbon-cycle-timeseries-waves-constrained} and \ref{fig:carbon-cycle-timeseries-anomaly-waves-constrained} is recommended to give more context. 
 
 \begin{figure*}[t]
-\includegraphics[width=12cm]{./figs/induced_constraint_barplot.pdf}
+\includegraphics[width=12cm]{./figs/fig06.pdf}
 \caption{Proportion of the range of all output spanned by the level 2-constrained ensemble. The outputs are: absolute values of the global mean values for 1995 - 2014 (left) and anomaly of those values from the 1850-1870 values (right)}
 \label{fig:induced_constraint_barplot}
 \end{figure*}
@@ -367,7 +367,7 @@ Further details are seen in fig. \ref{fig:output_pairs}, which plots two-dimensi
 
 
 \begin{figure*}[t]
-\includegraphics[width=12cm]{./figs/output_pairs.pdf}
+\includegraphics[width=12cm]{./figs/fig07.pdf}
 \caption{}
 \label{fig:output_pairs}
 \end{figure*}
@@ -378,7 +378,7 @@ Further details are seen in fig. \ref{fig:output_pairs}, which plots two-dimensi
 Rejecting implausible ensemble members based on their outputs gives a corresponding constraint on input space, and sets limits for the parameter space where the model can be said to be behaving consistently with observations. Using the original ensemble members produces a useful but rough constraint outline of this valid input space. With only 38 ensemble members in the first wave, we were able to outline the valid 32 dimensional input space only very approximately.
 
 \begin{figure*}[t]
-\includegraphics[width=12cm]{./figs/fig06.pdf}
+\includegraphics[width=12cm]{./figs/fig08.pdf}
 \caption{Two-dimensional projections of the density of input parameter candidates that conform to level 2 constraints. Blue regions have a higher density of points and red regions lower. Marginal histograms indicate the marginal density. Red points mark the standard input parameter value.}
 \label{fig:pairs_level2_ix_em_unif_wave00_wave01}
 \end{figure*}
@@ -418,13 +418,13 @@ We sample from the input space in a one-at-a-time fashion: each input is sampled
 Different model outputs are clearly sensitive to different model inputs, and so we also seek ways of summarising sensitivity across model outputs. One method is simply to find the mean effect across model outputs. Sensitivities are normalised so that they lie in a $[0 -1]$ range for each output. Summary measures for each input are then averaged across all outputs, and the plotted inputs are ranked by their average influence across all outputs. Individual sensitivities and summaries can be seen in fig. \ref{fig:oat_var_sensmat_level1a_wave01_Y} for the modern value, and in fig. \ref{fig:oat_var_sensmat_level1a_wave01_Anom} for the change over the historic period of the ensemble. The right-hand side of each diagram shows the average of the sensitivity measures, by which the input parameters are ranked in their influence. We see that for both modern value and anomaly, by this measure only half or fewer of the inputs have discernible impact on global outputs.
 
 \begin{figure}[t]
-\includegraphics[width=12cm]{./figs/fig07.pdf}
+\includegraphics[width=12cm]{./figs/fig09.pdf}
 \caption{One-at-a-time sensitivity summary for global summary ``modern value" output. The left hand plot shows the relationship between each individual input and output. The right hand plot shows the average of the sensitivity measures, by which the inputs are ranked. }
 \label{fig:oat_var_sensmat_level1a_wave01_Y}
 \end{figure}
 
 \begin{figure}[t]
-\includegraphics[width=12cm]{./figs/fig08.pdf}
+\includegraphics[width=12cm]{./figs/fig10.pdf}
 \caption{One-at-a-time sensitivity summary for global summary ``anomaly" (change since 1850-1870) output. The left hand plot shows the relationship between each individual input and output. The right hand plot shows the average of the sensitivity measures, by which the inputs are ranked.}
 \label{fig:oat_var_sensmat_level1a_wave01_Anom}
 \end{figure}
@@ -436,7 +436,7 @@ We add detail to our one-at-at-time sensitivity of important outputs - those tha
 For each input, we can see the default value as a vertical dashed line. This plot indicates how deficiencies in the model output might be corrected by altering individual parameters. For example, the fact that many ensemble members have low vegetation carbon might be countered by increasing $alpha\_io$ or $nmass\_io$, or reducing $g\_area\_io$ or $tleaf\_io$. Of course, these alterations will not be without impact on other model outputs, changes in which might be countered elsewhere, or must be weighted against improvements in a particular output.
 
 \begin{figure*}[t]
-\includegraphics[width=12cm]{./figs/fig09.pdf}
+\includegraphics[width=12cm]{./figs/fig11.pdf}
 \caption{One-at-a-time sensitivity summary for global summary of the ``modern value" of the constraint variables (nbp, npp, cVeg, cSoil)}
 \label{fig:Y_oaat_const_level1a_wave01_scaled_norm}
 \end{figure*}
@@ -457,7 +457,7 @@ A description of MCF and its uses can be found in \cite{pianosi2016sensitivity}.
 We use a Gaussian process emulator to allow a much larger set of samples from the input space, in order to make the MCF process more efficient, at the cost of inaccuracy if the emulator is poor. We train a Gaussian Process emulator on each of the four "constraint outputs", using the 751 ensemble members from both wave00 and wave01 that pass the level1a constraints. We draw a large sample of 10000 parameter combinations, uniformly from the level1a input parameter distributions. We use the emulator to estimate the true model output for each of the four "constraining variables", NPP, NBP, cVeg and cSoil at these parameter values. We perform a two-sample KS test on the cumulative distributions of those input samples where the mean of the emulator predicts that the model would be within or outside of the modeller's level 2 constraints. We use this KS statistic as an indicator of the sensitivity of the model output to each input. We summarise the sensitivity in fig. \ref{fig:MCF_sensmat_Yconst_level1a_wave01}.
 
 \begin{figure}[t]
-\includegraphics[width=12cm]{./figs/fig10.pdf}
+\includegraphics[width=12cm]{./figs/fig12.pdf}
 \caption{Monte Carlo filter sensitivity summary for global summary of the ``modern value" of the constraint variables (nbp, npp, cVeg, cSoil). The left hand plot shows the relationship between each individual input and output. The right hand plot shows the average of the sensitivity measures, by which the inputs are ranked.}
 \label{fig:MCF_sensmat_Yconst_level1a_wave01}
 \end{figure}
